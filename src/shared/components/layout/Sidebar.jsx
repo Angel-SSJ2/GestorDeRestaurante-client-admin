@@ -1,10 +1,8 @@
 export const Sidebar = () => {
   const items = [
-    { label: "Canchas" },
+    { label: "Restaurantes" },
     { label: "Reservaciones" },
-    { label: "Equipos" },
-    { label: "Torneos" },
-    { label: "Usuarios" },
+    { label: "Menus" },
   ];
   return (
     <aside className="w-60 bg-white min-h-[calc(100vh-4rem)] p-4 shadow-sm">
