@@ -1,15 +1,19 @@
-export const Sidebar = () => {
+export const Sidebar = ({ setSeccion }) => {
   const items = [
-    { label: "Restaurantes" },
-    { label: "Reservaciones" },
-    { label: "Menus" },
+    { label: "Restaurantes", value: "restaurantes" },
+    { label: "Reservaciones", value: "reservaciones" },
+    { label: "Menus", value: "menus" },
   ];
+
   return (
-    <aside className="w-60 bg-white min-h-[calc(100vh-4rem)] p-4 shadow-sm">
+    <aside className="w-60 bg-gray-200 min-h-[calc(100vh-4rem)] p-4 shadow-sm border-1 border-gray-400">
       <ul className="space-y-1">
         {items.map((item) => (
           <li key={item.label}>
-            <div className="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors">
+            <div
+              onClick={() => setSeccion(item.value)}
+              className="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+            >
               {item.label}
             </div>
           </li>
@@ -18,4 +22,5 @@ export const Sidebar = () => {
     </aside>
   );
 };
-export default Sidebar; 
+
+export default Sidebar;
