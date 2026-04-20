@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Navbar } from "./Navbar.jsx";
 import Sidebar from "./Sidebar.jsx";
-import Restaurantes from "../restaurants/Restaurantes.jsx";
-import Reservaciones from "../reservations/Reservaciones.jsx";
-import Menus from "../menus/Menus.jsx";
+import { Restaurantes } from "../../../features/restaurants/Restaurants.jsx";
+import { Reservaciones } from "../../../features/reservations/Reservations.jsx";
+import { Menus } from "../../../features/menus/Menus.jsx";
 
 export const DashboardContainer = () => {
     const [seccion, setSeccion] = useState("restaurantes");
