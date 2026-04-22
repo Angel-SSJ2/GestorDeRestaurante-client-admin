@@ -1,7 +1,12 @@
-import { Spinner } from "../auth/components/Spinner";
+import { useState } from "react";
+import { Spinner } from "../../auth/components/Spinner";
 import { MenuModal } from "./Menus.Modal";
+import pizza from "../../../assets/img/pizza.jpg";
+import hamburguesa from "../../../assets/img/hamburguesa.jpg";
+import NaranjadaVaso from "../../../assets/img/NaranjadaVaso.jpg";
 
 export const Menus = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);  
     const loading = false;
 
     if (loading) return <Spinner />;
@@ -19,7 +24,8 @@ export const Menus = () => {
                     </p>
                 </div>
 
-                <button className="bg-main-blue px-4 py-2 rounded text-white font-medium hover:opacity-90 transition shadow-md">
+                <button onClick={() => setIsModalOpen(true)}
+                className="bg-main-blue px-4 py-2 rounded text-white font-medium hover:opacity-90 transition shadow-md">
                     + Agregar Platillo
                 </button>
             </div>
@@ -30,69 +36,69 @@ export const Menus = () => {
                 {/* CARD 1: PLATO PRINCIPAL */}
                 <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:scale-[1.02]">
 
-                    {/* IMAGEN (photo) */}
-                    <div className="w-full h-52 bg-gray-100 flex items-center justify-center relative">
-                        <img
-                            src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=300&h=200&auto=format&fit=crop"
-                            alt="Platillo"
-                            className="w-full h-full object-cover rounded-t-xl"
-                        />
-                        <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg shadow text-main-blue font-bold">
-                            $15.50
-                        </div>
-                    </div>
-
-                    {/* CONTENIDO */}
-                    <div className="p-5">
-                        <div className="flex justify-between items-start">
-                            <h2 className="text-xl font-bold text-main-blue">
-                                Lomo Saltado
-                            </h2>
-                        </div>
-
-                        <div className="flex gap-2 mt-2">
-                            <span className="px-3 py-1 text-xs rounded-full bg-orange-100 text-orange-700 font-medium">
-                                PLATO PRINCIPAL
-                            </span>
-                            <span className="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700 font-medium">
-                                Activo
-                            </span>
-                        </div>
-
-                        <p className="text-sm text-gray-600 mt-3 line-clamp-2">
-                            Tradicional plato peruano con trozos de carne, cebolla, tomate y papas fritas, servido con arroz.
-                        </p>
-
-                        {/* BOTONES */}
-                        <div className="flex gap-3 mt-5">
-                            <button className="flex-1 py-2 rounded-lg bg-main-blue text-white font-medium hover:opacity-90 transition">
-                                ✏️ Editar
-                            </button>
-
-                            <button className="flex-1 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition">
-                                🗑️ Eliminar
-                            </button>
-                        </div>
+                {/* IMAGEN */}
+                <div className="w-full h-52 bg-gray-100 relative">
+                    <img
+                        src={pizza}
+                        alt="Platillo"
+                        className="w-full h-full object-cover"
+                    />
+                    {/* Precio flotante sobre la imagen para que se vea pro */}
+                    <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg shadow text-main-blue font-bold">
+                        Q65.00
                     </div>
                 </div>
+
+                {/* CONTENIDO (Ahora sí dentro del div de la Card) */}
+                <div className="p-5">
+                    <div className="flex justify-between items-start">
+                        <h2 className="text-xl font-bold text-main-blue">
+                            Pizza
+                        </h2>
+                    </div>
+
+                    <div className="flex gap-2 mt-2">
+                        <span className="px-3 py-1 text-xs rounded-full bg-orange-100 text-orange-700 font-medium">
+                            PLATO PRINCIPAL
+                        </span>
+                        <span className="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700 font-medium">
+                            Activo
+                        </span>
+                    </div>
+
+                    <p className="text-sm text-gray-600 mt-3 line-clamp-2">
+                        Pizza de especialidad con ingredientes frescos y masa artesanal, perfecta para compartir en familia o con amigos.
+                    </p>
+
+                    {/* BOTONES */}
+                    <div className="flex gap-3 mt-5">
+                        <button className="flex-1 py-2 rounded-lg bg-main-blue text-white font-medium hover:opacity-90 transition">
+                            ✏️ Editar
+                        </button>
+                        <button className="flex-1 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition">
+                            🗑️ Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
 
                 {/* CARD 2: BEBIDA */}
                 <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:scale-[1.02]">
                     
                     <div className="w-full h-52 bg-gray-100 flex items-center justify-center relative">
                         <img
-                            src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?q=80&w=300&h=200&auto=format&fit=crop"
+                            src={NaranjadaVaso}
                             alt="Bebida"
                             className="w-full h-full object-cover rounded-t-xl"
                         />
                         <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg shadow text-main-blue font-bold">
-                            $4.00
+                            Q10.00
                         </div>
                     </div>
 
                     <div className="p-5">
                         <h2 className="text-xl font-bold text-main-blue">
-                            Limonada Imperial
+                            Vaso de naranjada con soda
                         </h2>
 
                         <div className="flex gap-2 mt-2">
@@ -105,7 +111,7 @@ export const Menus = () => {
                         </div>
 
                         <p className="text-sm text-gray-600 mt-3 line-clamp-2">
-                            Refrescante limonada con hierbabuena y un toque secreto de la casa.
+                            Refrescante naranjada con soda .
                         </p>
 
                         <div className="flex gap-3 mt-5">
@@ -123,7 +129,9 @@ export const Menus = () => {
             </div>
 
             {/* MODAL */}
-            <MenuModal />
+            {isModalOpen && (
+                <MenuModal onClose={() => setIsModalOpen(false)} />
+            )}
         </div>
     );
 };

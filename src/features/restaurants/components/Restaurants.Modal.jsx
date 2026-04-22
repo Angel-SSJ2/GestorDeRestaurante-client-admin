@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const RestaurantModal = () => {
+export const RestaurantModal = ( { onClose } ) => {
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 px-3 sm:px-4">
             {/* CONTENEDOR */}
@@ -104,10 +104,11 @@ export const RestaurantModal = () => {
 
                     {/* BOTONES */}
                     <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t">
-                        <button className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 text-gray-600 font-medium hover:bg-gray-200 transition">
+                        <button onClick={onClose}
+                        className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gray-100 text-gray-600 font-medium hover:bg-gray-200 transition">
                             Cancelar
                         </button>
-                        <button
+                        <button 
                             className="w-full sm:w-auto px-6 py-2 rounded-lg text-white font-bold transition shadow-lg"
                             style={{ background: "linear-gradient(90deg, var(--main-blue) 0%, #1956a3 100%)" }}
                         >

@@ -4,7 +4,6 @@ import { ForgotPasswordForm } from "../components/ForgotPasswordForm";
 import { RegisterForm } from "../components/RegisterForm.jsx";
 
 const AuthPage = () => {
-    // ✅ UN SOLO ESTADO (forma correcta)
     const [view, setView] = useState("login");
 
     return (

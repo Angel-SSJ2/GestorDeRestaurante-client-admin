@@ -1,8 +1,14 @@
 export const Sidebar = ({ setSeccion }) => {
   const items = [
     { label: "Restaurantes", value: "restaurantes" },
-    { label: "Reservaciones", value: "reservaciones" },
     { label: "Menus", value: "menus" },
+    { label: "Table", value: "tables" },
+    { label: "Events", value: "events" },
+    { label: "Reservaciones", value: "reservaciones" },
+    { label: "Orders", value: "orders" },
+    { label: "Billings", value: "billings" },
+    { label: "Inventory", value: "inventory" },
+    { label: "Users", value: "users" },
   ];
 
   return (

@@ -1,4 +1,4 @@
-import imgLogo from "../../../assets/img/Logo_Restaurante.jpg";
+import imgLogo from "../../../assets/img/Logo_Restaurante.png";
 
 export const Navbar = () => {
   return (
@@ -10,11 +10,11 @@ export const Navbar = () => {
           <img
             src={imgLogo}
             alt="Gestor Logo"
-            className="h-8 md:h-10 w-auto object-contain"
+            className="h-8 md:h-15 w-auto object-contain"
           />
 
           <h1 className="font-bold text-white text-lg md:text-xl">
-            Gestor de Restaurante
+            Urban Central
           </h1>
         </div>
 
