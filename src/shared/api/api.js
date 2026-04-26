@@ -79,8 +79,8 @@ const handleRefreshToken = async function (_error) {
     try {
       // IMPORTANTE: Podrías usar axios (directo) para evitar interceptores aquí
       const response = await axios.post(`${import.meta.env.VITE_AUTH_URL}/auth/refresh`, { 
-        refreshToken 
-      });
+      refreshToken 
+      } );
 
       const { accessToken, refreshToken: newRefreshToken, expiresIn, userDetails } = response.data;
 

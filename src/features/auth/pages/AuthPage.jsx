@@ -14,9 +14,9 @@ const AuthPage = () => {
                 {/* LOGO */}
                 <div className="flex justify-center mb-6">
                     <img
-                        src="/src/assets/img/Logo_Restaurante.jpg"
+                        src="/src/assets/img/Logo_Restaurante.png"
                         alt="Gestor de Restaurante Logo"
-                        className="h-20 w-auto"
+                        className="h-30 w-auto"
                     />
                 </div>
 
