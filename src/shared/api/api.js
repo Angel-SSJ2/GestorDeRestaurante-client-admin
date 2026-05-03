@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from '../../features/auth/store/authStore';
 
-// Instancia de axios para autenticación y peticiones generales
 const axiosAuth = axios.create({
   baseURL: import.meta.env.VITE_AUTH_URL,
   timeout: 8000,
@@ -10,19 +9,25 @@ const axiosAuth = axios.create({
   }
 });
 
-// Interceptor de Petición (Request)
-axiosAuth.interceptors.request.use((config) => {
-    // Marcamos la instancia si tuviéramos varias
-    config._axiosClient = 'auth'; 
-    
+const axiosAdmin = axios.create({
+  baseURL: import.meta.env.VITE_ADMIN_URL,
+  timeout: 8000,
+  headers: {
+    'Content-Type': 'application/json',
+  }
+});
+
+const requestInterceptor = (config) => {
     const token = useAuthStore.getState().token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
-});
+};
 
-// Lógica de Cola para peticiones concurrentes
+axiosAuth.interceptors.request.use(requestInterceptor);
+axiosAdmin.interceptors.request.use(requestInterceptor);
+
 let _isRefreshing = false;
 let failedQueue = [];
 
@@ -33,7 +38,6 @@ function _processQueue(_error, token = null) {
   failedQueue = [];
 }
 
-// Interceptor de Respuesta (Manejo de Refresh Token)
 const handleRefreshToken = async function (_error) {
   const _original = _error.config;
 
@@ -45,7 +49,6 @@ const handleRefreshToken = async function (_error) {
   const errorCode = _error.response?.data?.error;
   const requestUrl = _original.url || "";
   
-  // Evitar que el propio endpoint de refresh dispare el interceptor
   const isRefreshEndpoint = requestUrl.includes("/auth/refresh");
 
   const shouldRefresh = !isRefreshEndpoint && (
@@ -60,7 +63,7 @@ const handleRefreshToken = async function (_error) {
       })
       .then((token) => {
         _original.headers["Authorization"] = "Bearer " + token;
-        return axiosAuth(_original); // Reintentamos con la instancia actual
+        return axiosAuth(_original); 
       })
       .catch((err) => Promise.reject(err));
     }
@@ -76,14 +79,12 @@ const handleRefreshToken = async function (_error) {
     }
 
     try {
-      // IMPORTANTE: Podrías usar axios (directo) para evitar interceptores aquí
       const response = await axios.post(`${import.meta.env.VITE_AUTH_URL}/auth/refresh`, { 
-      refreshToken 
-      } );
+        refreshToken 
+      });
 
       const { accessToken, refreshToken: newRefreshToken, expiresIn, userDetails } = response.data;
 
-      // Actualizar Zustand
       useAuthStore.setState({
         token: accessToken,
         refreshToken: newRefreshToken,
@@ -95,7 +96,8 @@ const handleRefreshToken = async function (_error) {
       _processQueue(null, accessToken);
       
       _original.headers["Authorization"] = "Bearer " + accessToken;
-      return axiosAuth(_original);
+      
+      return _original._axiosClient === 'admin' ? axiosAdmin(_original) : axiosAuth(_original);
 
     } catch (err) {
       _processQueue(err, null);
@@ -109,7 +111,10 @@ const handleRefreshToken = async function (_error) {
   return Promise.reject(_error);
 };
 
-// Aplicar interceptor de respuesta
 axiosAuth.interceptors.response.use((res) => res, handleRefreshToken);
+axiosAdmin.interceptors.response.use((res) => res, handleRefreshToken);
 
-export { axiosAuth, axiosAuth as axiosAdmin, handleRefreshToken };
+axiosAuth.interceptors.request.use(cfg => { cfg._axiosClient = 'auth'; return cfg; });
+axiosAdmin.interceptors.request.use(cfg => { cfg._axiosClient = 'admin'; return cfg; });
+
+export { axiosAuth, axiosAdmin, handleRefreshToken };

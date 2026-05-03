@@ -1,5 +1,21 @@
+import { useEffect, useState } from "react";
+import { useAdminStore } from "../store/adminStore"; 
+import { CreateUserModal } from "./CreateUserModal"; 
+import { UserDetailModal } from "./UserDetailModal";
+
 export const Users = () => {
-    const users = []; 
+    const { users, getUsers, loading } = useAdminStore();
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+    useEffect(() => {
+        getUsers();
+    }, []);
+
+    const filteredUsers = users.filter(u => 
+        u.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        u.username.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="p-4">
@@ -8,11 +24,14 @@ export const Users = () => {
                 <div>
                     <h1 className="text-3xl font-bold text-gray-800">Usuarios</h1>
                     <p className="text-gray-500 text-sm">
-                        Administra usuarios, consulta su información y cambia su rol
+                        Administra el personal de Urban Central (Admins, Meseros, Cocina)
                     </p>
                 </div>
 
-                <button className="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700 transition">
+                <button 
+                    onClick={() => setShowCreateModal(true)}
+                    className="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700 transition"
+                >
                     + Agregar Usuario
                 </button>
             </div>
@@ -22,12 +41,15 @@ export const Users = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <input
                         placeholder="Buscar por nombre o username..."
-                        className="md:col-span-2 w-full px-3 py-2 border rounded-lg"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="md:col-span-2 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <select className="w-full px-3 py-2 border rounded-lg">
                         <option>Todos los roles</option>
                         <option>ADMIN_ROLE</option>
-                        <option>USER_ROLE</option>
+                        <option>WAITER_ROLE</option>
+                        <option>KITCHEN_ROLE</option>
                     </select>
                 </div>
             </div>
@@ -46,34 +68,39 @@ export const Users = () => {
                         </thead>
 
                         <tbody>
-                            {users.length === 0 ? (
+                            {loading ? (
                                 <tr>
-                                    <td
-                                        className="px-4 py-6 text-center text-gray-500"
-                                        colSpan={4}
-                                    >
-                                        No hay usuarios para mostrar.
+                                    <td colSpan={4} className="px-4 py-10 text-center text-blue-600 font-semibold">
+                                        Cargando usuarios...
+                                    </td>
+                                </tr>
+                            ) : filteredUsers.length === 0 ? (
+                                <tr>
+                                    <td className="px-4 py-6 text-center text-gray-500" colSpan={4}>
+                                        No se encontraron usuarios.
                                     </td>
                                 </tr>
                             ) : (
-                                users.map((u) => (
-                                    <tr key={u.id} className="border-t hover:bg-gray-50">
+                                filteredUsers.map((u) => (
+                                    <tr key={u.id} className="border-t hover:bg-gray-50 transition-colors">
                                         <td className="px-4 py-3 font-medium text-gray-800">
                                             {u.name} {u.surname}
                                         </td>
-
                                         <td className="px-4 py-3 text-gray-700">
                                             @{u.username}
                                         </td>
-
                                         <td className="px-4 py-3">
-                                            <span className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                                u.role === 'ADMIN_ROLE' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'
+                                            }`}>
                                                 {u.role}
                                             </span>
                                         </td>
-
                                         <td className="px-4 py-3 text-right">
-                                            <button className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700">
+                                            <button 
+                                                onClick={() => setSelectedUser(u)}
+                                                className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition"
+                                            >
                                                 Ver / Editar
                                             </button>
                                         </td>
@@ -83,28 +110,20 @@ export const Users = () => {
                         </tbody>
                     </table>
                 </div>
-
-                {/* PAGINACIÓN (UI) */}
-                <div className="flex items-center justify-between px-4 py-3 border-t bg-gray-50">
-                    <p className="text-xs text-gray-600">
-                        Mostrando 1 - 8 de 0
-                    </p>
-
-                    <div className="flex gap-2">
-                        <button className="px-3 py-1.5 rounded border bg-white text-sm">
-                            Anterior
-                        </button>
-
-                        <span className="px-2 py-1.5 text-sm text-gray-700">
-                            1 / 1
-                        </span>
-
-                        <button className="px-3 py-1.5 rounded border bg-white text-sm">
-                            Siguiente
-                        </button>
-                    </div>
-                </div>
             </div>
+
+            {/* MODALES */}
+            {showCreateModal && (
+                <CreateUserModal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} />
+            )}
+            
+            {selectedUser && (
+                <UserDetailModal 
+                    user={selectedUser} 
+                    isOpen={!!selectedUser} 
+                    onClose={() => setSelectedUser(null)} 
+                />
+            )}
         </div>
     );
 };

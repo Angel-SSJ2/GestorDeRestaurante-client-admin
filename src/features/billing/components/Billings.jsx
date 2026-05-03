@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAdminStore } from "../../users/store/adminStore";
 import { Spinner } from "../../auth/components/Spinner";
 import { BillingModal } from "./Billings.Modal";
 
 export const Billings = () => {
+    const { billings, loading, getBillings } = useAdminStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const loading = false;
 
-    // Estilo para los métodos de pago
+    useEffect(() => {
+        getBillings();
+    }, []);
+
     const getPaymentBadge = (method) => {
         const styles = {
             'EFECTIVO': 'bg-emerald-100 text-emerald-700 border-emerald-200',
@@ -16,15 +20,14 @@ export const Billings = () => {
         return styles[method] || 'bg-gray-100 text-gray-700';
     };
 
-    if (loading) return <Spinner />;
+    if (loading && billings.length === 0) return <Spinner />;
 
     return (
         <div className="p-4">
-            {/* HEADER */}
             <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
                 <div>
                     <h1 className="text-3xl font-bold text-main-blue">Facturación</h1>
-                    <p className="text-gray-500 text-sm">Registro de pagos y comprobantes emitidos</p>
+                    <p className="text-gray-500 text-sm">Registro de pagos de Urban Central</p>
                 </div>
 
                 <button 
@@ -35,7 +38,6 @@ export const Billings = () => {
                 </button>
             </div>
 
-            {/* TABLA DE FACTURAS (Más eficiente para finanzas) */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
@@ -44,29 +46,33 @@ export const Billings = () => {
                                 <th className="p-4 text-xs font-black text-gray-400 uppercase">Cliente / Orden</th>
                                 <th className="p-4 text-xs font-black text-gray-400 uppercase">Monto</th>
                                 <th className="p-4 text-xs font-black text-gray-400 uppercase">Método</th>
-                                <th className="p-4 text-xs font-black text-gray-400 uppercase">Ubicación</th>
                                 <th className="p-4 text-xs font-black text-gray-400 uppercase">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
-                            <tr className="hover:bg-blue-50/30 transition">
-                                <td className="p-4">
-                                    <p className="font-bold text-gray-800">Juan Pérez</p>
-                                    <p className="text-[10px] text-main-blue font-bold uppercase">Orden #A-102</p>
-                                </td>
-                                <td className="p-4 font-black text-gray-700 text-lg">Q 150.00</td>
-                                <td className="p-4">
-                                    <span className={`px-3 py-1 rounded-full text-[10px] font-black border ${getPaymentBadge('TARJETA')}`}>
-                                        TARJETA
-                                    </span>
-                                </td>
-                                <td className="p-4">
-                                    <p className="text-xs text-gray-500 italic">Urban Central - zona 16</p>
-                                </td>
-                                <td className="p-4">
-                                    <button className="text-main-blue hover:underline font-bold text-sm">Ver Comprobante</button>
-                                </td>
-                            </tr>
+                            {billings.length > 0 ? (
+                                billings.map((bill) => (
+                                    <tr key={bill._id} className="hover:bg-blue-50/30 transition">
+                                        <td className="p-4">
+                                            <p className="font-bold text-gray-800">{bill.order?.user?.username || 'C/F'}</p>
+                                            <p className="text-[10px] text-main-blue font-bold uppercase">Orden #{bill.order?._id?.slice(-5)}</p>
+                                        </td>
+                                        <td className="p-4 font-black text-gray-700 text-lg">Q {bill.amount.toFixed(2)}</td>
+                                        <td className="p-4">
+                                            <span className={`px-3 py-1 rounded-full text-[10px] font-black border ${getPaymentBadge(bill.paymentMethod)}`}>
+                                                {bill.paymentMethod}
+                                            </span>
+                                        </td>
+                                        <td className="p-4">
+                                            <button className="text-main-blue hover:underline font-bold text-sm">Ver Comprobante</button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" className="p-8 text-center text-gray-400 italic">No hay facturas registradas</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>

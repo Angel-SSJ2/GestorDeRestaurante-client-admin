@@ -1,56 +1,66 @@
 import React, { useState } from 'react';
+import { useSaveBilling } from "../hooks/useSaveBilling";
+import { useAdminStore } from "../../users/store/adminStore";
 
 export const BillingModal = ({ onClose }) => {
+    const { saveBilling } = useSaveBilling();
     
-    const ordenesPendientes = [
-        { id: "102", cliente: "Juan Pérez", total: 150.00, location: "Sucursal Norte" },
-        { id: "105", cliente: "Maria Sosa", total: 85.50, location: "Zona Viva" }
-    ];
+    const { orders = [] } = useAdminStore();
+    
+    const ordenesPendientes = orders.filter(o => o.status === 'PENDING');
 
     const [formData, setFormData] = useState({
         orderId: '',
         clientName: '',
         amount: 0,
         paymentMethod: 'EFECTIVO',
-        location: ''
+        receiptPhoto: null
     });
 
     const handleOrderSelect = (e) => {
         const orderId = e.target.value;
-        const selectedOrder = ordenesPendientes.find(o => o.id === orderId);
+        const selectedOrder = ordenesPendientes.find(o => o._id === orderId);
         
         if (selectedOrder) {
             setFormData({
                 ...formData,
-                orderId: selectedOrder.id,
-                clientName: selectedOrder.cliente,
-                amount: selectedOrder.total,
-                location: selectedOrder.location
+                orderId: selectedOrder._id,
+                clientName: selectedOrder.user?.username || 'Cliente',
+                amount: selectedOrder.total
             });
         }
+    };
+
+    const handleFileChange = (e) => {
+        setFormData({ ...formData, receiptPhoto: e.target.files[0] });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const success = await saveBilling(formData);
+        if (success) onClose();
     };
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 px-3">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-                
                 <div className="p-5 text-white bg-emerald-600">
                     <h2 className="text-2xl font-bold">Generar Pago</h2>
                     <p className="text-sm opacity-80">Vincula una orden para facturar</p>
                 </div>
 
-                <form className="p-6 space-y-4">
-                    {/* SELECCIÓN DE ORDEN (Relación Directa) */}
+                <form onSubmit={handleSubmit} className="p-6 space-y-4">
                     <div className="flex flex-col">
                         <label className="text-sm font-semibold text-gray-700 mb-1">Seleccionar Orden Pendiente</label>
                         <select 
+                            required
                             onChange={handleOrderSelect}
-                            className="w-full px-3 py-2 rounded-lg border-2 border-emerald-200 bg-gray-50 focus:bg-white outline-none transition"
+                            className="w-full px-3 py-2 rounded-lg border-2 border-emerald-200 bg-gray-50 outline-none"
                         >
                             <option value="">-- Elige una orden --</option>
                             {ordenesPendientes.map(o => (
-                                <option key={o.id} value={o.id}>
-                                    Orden #{o.id} - {o.cliente} (Q{o.total})
+                                <option key={o._id} value={o._id}>
+                                    Orden #{o._id.slice(-5)} - {o.user?.username} (Q{o.total})
                                 </option>
                             ))}
                         </select>
@@ -67,7 +77,6 @@ export const BillingModal = ({ onClose }) => {
                         </div>
                     </div>
 
-                    {/* MÉTODO DE PAGO */}
                     <div className="flex flex-col">
                         <label className="text-sm font-semibold text-gray-700 mb-1">Método de Pago</label>
                         <div className="grid grid-cols-3 gap-2">
@@ -88,10 +97,14 @@ export const BillingModal = ({ onClose }) => {
                         </div>
                     </div>
 
-                    {/* Foto Comprobante */}
                     <div className="flex flex-col">
                         <label className="text-sm font-semibold text-gray-700 mb-1">Foto del Comprobante</label>
-                        <input type="file" className="text-xs file:bg-emerald-50 file:text-emerald-700 file:border-0 file:rounded-full file:px-4 file:py-2" />
+                        <input 
+                            type="file" 
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="text-xs file:bg-emerald-50 file:text-emerald-700 file:border-0 file:rounded-full file:px-4 file:py-2 cursor-pointer" 
+                        />
                     </div>
 
                     <div className="flex gap-3 pt-6 border-t">

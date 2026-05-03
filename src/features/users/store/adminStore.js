@@ -1,26 +1,70 @@
 import { create } from "zustand";
 import {
-    getTables as getTablesRequest,          // Antes getFields
-    createTable as createTableRequest,      // Antes createField
+    // Mesas
+    getTables as getTablesRequest,
+    createTable as createTableRequest,
+    // Reservaciones
     getAllReservations as getAllReservationsRequest,
     confirmReservation as confirmReservationRequest,
+    // Usuarios 
+    getUsers as getUsersRequest,
+    createUser as createUserRequest,
+    updateUser as updateUserRequest,
+    deleteUser as deleteUserRequest
 } from "../../../shared/api";
 
 export const useAdminStore = create((set, get) => ({
-    tables: [],         // Antes fields
+    tables: [],
     reservations: [],
+    users: [], 
     loading: false,
     error: null,
 
-    // Obtener las mesas del restaurante
+    // ================= SECCIÓN USUARIOS =================
+    getUsers: async () => {
+        try {
+            set({ loading: true, error: null });
+            const response = await getUsersRequest();
+            
+            const data = response.data?.data || response.data || response;
+            
+            set({
+                users: data,
+                loading: false,
+            });
+        } catch (error) {
+            set({
+                error: error.response?.data?.message || "Error al obtener usuarios",
+                loading: false,
+            });
+        }
+    },
+
+    createUser: async (userData) => {
+        try {
+            set({ loading: true, error: null });
+            const response = await createUserRequest(userData);
+            const newUser = response.data?.data || response.data || response;
+
+            set({
+                users: [newUser, ...get().users],
+                loading: false,
+            });
+        } catch (error) {
+            set({
+                loading: false,
+                error: error.response?.data?.message || "Error al crear usuario",
+            });
+        }
+    },
+
+    // ================= SECCIÓN MESAS =================
     getTables: async () => {
         try {
             set({ loading: true, error: null });
             const response = await getTablesRequest();
-            
-            // Ajustamos según la estructura de tu respuesta de C#
             set({
-                tables: response.data || response, 
+                tables: response.data?.data || response.data || response, 
                 loading: false,
             });
         } catch (error) {
@@ -31,14 +75,14 @@ export const useAdminStore = create((set, get) => ({
         }
     },
 
-    // Crear una nueva mesa (ej. Mesa 5, VIP, 4 personas)
     createTable: async (formData) => {
         try {
             set({ loading: true, error: null });
             const response = await createTableRequest(formData);
+            const newTable = response.data?.data || response.data || response;
 
             set({
-                tables: [response.data, ...get().tables],
+                tables: [newTable, ...get().tables],
                 loading: false,
             });
         } catch (error) {
@@ -49,13 +93,13 @@ export const useAdminStore = create((set, get) => ({
         }
     },
 
+    // ================= SECCIÓN RESERVACIONES =================
     getAllReservations: async () => {
         try {
             set({ loading: true, error: null });
             const response = await getAllReservationsRequest();
-
             set({
-                reservations: response.data || response,
+                reservations: response.data?.data || response.data || response,
                 loading: false,
             });
         } catch (error) {
@@ -70,9 +114,7 @@ export const useAdminStore = create((set, get) => ({
         try {
             set({ loading: true, error: null });
             await confirmReservationRequest(id);
-
-            // Refrescamos la lista automáticamente
-            await get().getAllReservations();
+            await get().getAllReservations(); 
             set({ loading: false });
         } catch (error) {
             set({
