@@ -1,4 +1,5 @@
 import imgLogo from "../../../assets/img/Logo_Restaurante.png";
+import { AvatarUser } from "../../ui/AvatarUser"
 
 export const Navbar = () => {
   return (
@@ -14,12 +15,12 @@ export const Navbar = () => {
           />
 
           <h1 className="font-bold text-white text-lg md:text-xl">
-            Urban Central
+            Urban Central Admin
           </h1>
         </div>
 
         {/* Avatar placeholder */}
-        <div className="w-10 h-10 rounded-full bg-gray-200" />
+        <AvatarUser/>
 
       </div>
     </nav>

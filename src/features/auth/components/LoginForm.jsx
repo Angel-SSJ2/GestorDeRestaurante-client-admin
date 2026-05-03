@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-export const LoginForm = ({ onForgot, onRegister }) => {
+export const LoginForm = ({ onForgotPassword, onRegister }) => {
     const navigate = useNavigate();
 
     // Traemos acciones y estados del store
@@ -17,15 +17,20 @@ export const LoginForm = ({ onForgot, onRegister }) => {
     } = useForm();
 
     const onSubmit = async (formData) => {
-        const res = await login(formData);
-        
-        if (res.success) {
-            navigate("/dashboard");
-            toast.success("¡Bienvenido de nuevo!");
-        } else {
-            console.error("Error en el login:", res.error);
-        }
-    };
+    const res = await login(formData);
+    
+    // AGREGA ESTO PARA VER QUÉ RECIBES
+    console.log("Respuesta completa del servidor/store:", res);
+    
+    if (res?.succes) { // El ? evita que el código rompa si res es undefined
+        navigate("/dashboard");
+        toast.success("¡Bienvenido de nuevo!");
+    } else {
+        // Esto te dirá qué está fallando realmente
+        console.error("Error en el login, objeto de respuesta:", res);
+        toast.error(res?.error || "Error al iniciar sesión");
+    }
+};
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -73,7 +78,7 @@ export const LoginForm = ({ onForgot, onRegister }) => {
                 <p>
                     <button
                         type="button"
-                        onClick={onForgot}
+                        onClick={onForgotPassword}
                         className="text-sm text-main-blue hover:underline"
                     >
                         ¿Olvidaste tu contraseña?

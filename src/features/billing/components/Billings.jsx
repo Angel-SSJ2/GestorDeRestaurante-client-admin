@@ -31,7 +31,7 @@ export const Billings = () => {
                     onClick={() => setIsModalOpen(true)}
                     className="bg-emerald-600 px-6 py-2.5 rounded-lg text-white font-bold hover:scale-105 transition-transform shadow-lg flex items-center gap-2"
                 >
-                    <span>💰</span> Generar Factura
+                    <span>+</span> Generar Factura
                 </button>
             </div>
 

@@ -1,4 +1,4 @@
-export const RegisterForm = ({ onLogin }) => {
+export const RegisterForm = ({ onBack }) => {
 
     return (
         <form className="space-y-5">
@@ -47,7 +47,7 @@ export const RegisterForm = ({ onLogin }) => {
             <p className="text-center text-sm">
                 <button
                     type="button"
-                    onClick={onLogin} 
+                    onClick={onBack} 
                     className="text-main-blue hover:underline"
                 >
                     ¿Ya tienes cuenta?

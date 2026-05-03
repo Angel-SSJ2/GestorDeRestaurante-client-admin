@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Spinner } from "../../auth/components/Spinner";
 import { ReservationModal } from "./Reservations.Modal";
 
-export const Reservaciones = () => {
+export const Reservations = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const loading = false;
 
@@ -113,4 +113,4 @@ export const Reservaciones = () => {
     );
 };
 
-export default Reservaciones;
+export default Reservations;

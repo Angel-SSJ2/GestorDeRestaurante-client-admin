@@ -1,5 +1,4 @@
 import axios from 'axios';
-// Corregido: punto en lugar de coma
 import { useAuthStore } from '../../features/auth/store/authStore';
 
 // Instancia de axios para autenticación y peticiones generales
@@ -113,4 +112,4 @@ const handleRefreshToken = async function (_error) {
 // Aplicar interceptor de respuesta
 axiosAuth.interceptors.response.use((res) => res, handleRefreshToken);
 
-export { axiosAuth, handleRefreshToken };
+export { axiosAuth, axiosAuth as axiosAdmin, handleRefreshToken };

@@ -1,4 +1,4 @@
-export const ForgotPasswordForm = ({ onLogin }) => {
+export const ForgotPasswordForm = ({ onBack }) => {
     return (
         <form className="space-y-5">
             <div>
@@ -23,7 +23,7 @@ export const ForgotPasswordForm = ({ onLogin }) => {
                 <p>¿Recordaste tu contraseña?</p>
                 <button
                     type="button"
-                    onClick={onLogin}
+                    onClick={onBack}
                     className="text-main-blue font-medium hover:underline mt-1"
                 >
                     Iniciar sesión

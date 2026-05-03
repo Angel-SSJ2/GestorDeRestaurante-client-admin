@@ -42,9 +42,7 @@ export const Tables = () => {
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col items-center hover:shadow-md transition-shadow relative overflow-hidden">
                     
                     {/* Indicador de Sucursal (Tag superior) */}
-                    <div className="absolute top-0 right-0 bg-gray-100 px-3 py-1 rounded-bl-xl border-l border-b border-gray-50">
-                        <span className="text-[9px] font-black text-gray-500 uppercase tracking-wider">Zona Viva</span>
-                    </div>
+                    
 
                     <div className="w-20 h-20 bg-main-blue/10 rounded-full flex items-center justify-center mb-4 mt-2">
                         <span className="text-3xl font-black text-main-blue">01</span>

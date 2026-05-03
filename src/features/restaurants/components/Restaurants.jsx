@@ -13,7 +13,7 @@ export const Restaurantes = () => {
     return (
         <div className="p-4">
             {/* HEADER */}
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8 ">
                 <div>
                     <h1 className="text-3xl font-bold text-main-blue">
                         Nuestros Restaurantes
@@ -74,9 +74,6 @@ export const Restaurantes = () => {
                             <button className="py-2 rounded-xl bg-gray-50 text-gray-700 font-semibold border border-gray-200 hover:bg-gray-100 transition">
                                 ⚙️ Ajustes
                             </button>
-                            <button className="py-2 rounded-xl bg-main-blue/10 text-main-blue font-bold hover:bg-main-blue hover:text-white transition">
-                                👁️ Ver Menú
-                            </button>
                         </div>
 
                     </div>
@@ -123,9 +120,6 @@ export const Restaurantes = () => {
                         <div className="grid grid-cols-2 gap-3 mt-6">
                             <button className="py-2 rounded-xl bg-gray-50 text-gray-700 font-semibold border border-gray-200 hover:bg-gray-100 transition">
                                 ⚙️ Ajustes
-                            </button>
-                            <button className="py-2 rounded-xl bg-main-blue/10 text-main-blue font-bold hover:bg-main-blue hover:text-white transition">
-                                👁️ Ver Menú
                             </button>
                         </div>
 
