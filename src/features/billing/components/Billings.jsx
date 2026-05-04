@@ -4,7 +4,7 @@ import { Spinner } from "../../auth/components/Spinner";
 import { BillingModal } from "./Billings.Modal";
 
 export const Billings = () => {
-    const { billings, loading, getBillings } = useAdminStore();
+    const { billings = [], loading, getBillings } = useAdminStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ export const Billings = () => {
             'TARJETA': 'bg-purple-100 text-purple-700 border-purple-200',
             'TRANSFERENCIA': 'bg-blue-100 text-blue-700 border-blue-200'
         };
-        return styles[method] || 'bg-gray-100 text-gray-700';
+        return styles[method?.toUpperCase()] || 'bg-gray-100 text-gray-700';
     };
 
     if (loading && billings.length === 0) return <Spinner />;
@@ -32,9 +32,9 @@ export const Billings = () => {
 
                 <button 
                     onClick={() => setIsModalOpen(true)}
-                    className="bg-emerald-600 px-6 py-2.5 rounded-lg text-white font-bold hover:scale-105 transition-transform shadow-lg flex items-center gap-2"
+                    className="bg-blue-900 px-6 py-2.5 rounded-lg text-white font-bold hover:scale-105 transition-transform shadow-lg flex items-center gap-2"
                 >
-                    <span>+</span> Generar Factura
+                    <span className="text-xl">+</span> Generar Factura
                 </button>
             </div>
 
@@ -54,23 +54,33 @@ export const Billings = () => {
                                 billings.map((bill) => (
                                     <tr key={bill._id} className="hover:bg-blue-50/30 transition">
                                         <td className="p-4">
-                                            <p className="font-bold text-gray-800">{bill.order?.user?.username || 'C/F'}</p>
-                                            <p className="text-[10px] text-main-blue font-bold uppercase">Orden #{bill.order?._id?.slice(-5)}</p>
+                                            <p className="font-bold text-gray-800">
+                                                {bill.order?.user?.username || bill.clientName || 'C/F'}
+                                            </p>
+                                            <p className="text-[10px] text-main-blue font-bold uppercase">
+                                                Orden #{bill.order?._id?.slice(-5) || 'N/A'}
+                                            </p>
                                         </td>
-                                        <td className="p-4 font-black text-gray-700 text-lg">Q {bill.amount.toFixed(2)}</td>
+                                        <td className="p-4 font-black text-gray-700 text-lg">
+                                            Q {(bill.amount || bill.total || 0).toFixed(2)}
+                                        </td>
                                         <td className="p-4">
                                             <span className={`px-3 py-1 rounded-full text-[10px] font-black border ${getPaymentBadge(bill.paymentMethod)}`}>
-                                                {bill.paymentMethod}
+                                                {bill.paymentMethod || 'NO ESPECIFICADO'}
                                             </span>
                                         </td>
                                         <td className="p-4">
-                                            <button className="text-main-blue hover:underline font-bold text-sm">Ver Comprobante</button>
+                                            <button className="text-main-blue hover:underline font-bold text-sm">
+                                                Ver Comprobante
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="4" className="p-8 text-center text-gray-400 italic">No hay facturas registradas</td>
+                                    <td colSpan="4" className="p-8 text-center text-gray-400 italic">
+                                        No hay facturas registradas en el sistema.
+                                    </td>
                                 </tr>
                             )}
                         </tbody>

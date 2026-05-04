@@ -30,7 +30,7 @@ export const Users = () => {
 
                 <button 
                     onClick={() => setShowCreateModal(true)}
-                    className="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700 transition"
+                    className="bg-blue-900 px-4 py-2 rounded text-white hover:bg-green-700 transition"
                 >
                     + Agregar Usuario
                 </button>

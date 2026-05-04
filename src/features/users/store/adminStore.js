@@ -1,22 +1,28 @@
 import { create } from "zustand";
 import {
-    // Mesas
     getTables as getTablesRequest,
     createTable as createTableRequest,
-    // Reservaciones
     getAllReservations as getAllReservationsRequest,
     confirmReservation as confirmReservationRequest,
-    // Usuarios 
     getUsers as getUsersRequest,
     createUser as createUserRequest,
     updateUser as updateUserRequest,
-    deleteUser as deleteUserRequest
+    deleteUser as deleteUserRequest,
+    getRestaurants as getRestaurantsRequest,
+    getBillings as getBillingsRequest,
+    getDishes as getDishesRequest
 } from "../../../shared/api";
 
 export const useAdminStore = create((set, get) => ({
+    users: [],
+    billings: [],
+    events: [],
+    inventory: [],
+    menus: [],
+    orders: [],
     tables: [],
     reservations: [],
-    users: [], 
+    restaurants: [],     
     loading: false,
     error: null,
 
@@ -25,18 +31,10 @@ export const useAdminStore = create((set, get) => ({
         try {
             set({ loading: true, error: null });
             const response = await getUsersRequest();
-            
             const data = response.data?.data || response.data || response;
-            
-            set({
-                users: data,
-                loading: false,
-            });
+            set({ users: data, loading: false });
         } catch (error) {
-            set({
-                error: error.response?.data?.message || "Error al obtener usuarios",
-                loading: false,
-            });
+            set({ error: error.response?.data?.message || "Error al obtener usuarios", loading: false });
         }
     },
 
@@ -45,16 +43,9 @@ export const useAdminStore = create((set, get) => ({
             set({ loading: true, error: null });
             const response = await createUserRequest(userData);
             const newUser = response.data?.data || response.data || response;
-
-            set({
-                users: [newUser, ...get().users],
-                loading: false,
-            });
+            set({ users: [newUser, ...get().users], loading: false });
         } catch (error) {
-            set({
-                loading: false,
-                error: error.response?.data?.message || "Error al crear usuario",
-            });
+            set({ loading: false, error: error.response?.data?.message || "Error al crear usuario" });
         }
     },
 
@@ -63,15 +54,9 @@ export const useAdminStore = create((set, get) => ({
         try {
             set({ loading: true, error: null });
             const response = await getTablesRequest();
-            set({
-                tables: response.data?.data || response.data || response, 
-                loading: false,
-            });
+            set({ tables: response.data?.data || response.data || response, loading: false });
         } catch (error) {
-            set({
-                error: error.response?.data?.message || "Error al obtener mesas",
-                loading: false,
-            });
+            set({ error: error.response?.data?.message || "Error al obtener mesas", loading: false });
         }
     },
 
@@ -80,16 +65,9 @@ export const useAdminStore = create((set, get) => ({
             set({ loading: true, error: null });
             const response = await createTableRequest(formData);
             const newTable = response.data?.data || response.data || response;
-
-            set({
-                tables: [newTable, ...get().tables],
-                loading: false,
-            });
+            set({ tables: [newTable, ...get().tables], loading: false });
         } catch (error) {
-            set({
-                loading: false,
-                error: error.response?.data?.message || "Error al crear mesa",
-            });
+            set({ loading: false, error: error.response?.data?.message || "Error al crear mesa" });
         }
     },
 
@@ -98,15 +76,9 @@ export const useAdminStore = create((set, get) => ({
         try {
             set({ loading: true, error: null });
             const response = await getAllReservationsRequest();
-            set({
-                reservations: response.data?.data || response.data || response,
-                loading: false,
-            });
+            set({ reservations: response.data?.data || response.data || response, loading: false });
         } catch (error) {
-            set({
-                error: error.response?.data?.message || "Error al obtener reservaciones",
-                loading: false,
-            });
+            set({ error: error.response?.data?.message || "Error al obtener reservaciones", loading: false });
         }
     },
 
@@ -117,10 +89,78 @@ export const useAdminStore = create((set, get) => ({
             await get().getAllReservations(); 
             set({ loading: false });
         } catch (error) {
-            set({
-                error: error.response?.data?.message || "Error al confirmar reservación",
-                loading: false,
-            });
+            set({ error: error.response?.data?.message || "Error al confirmar reservación", loading: false });
         }
     },
+
+    // ================= SECCIÓN FACTURACIÓN =================
+    getBillings: async () => {
+        try {
+            set({ loading: true, error: null });
+            const response = await getBillingsRequest();
+            const data = response.data?.data || response.data || response;
+            set({ billings: Array.isArray(data) ? data : [], loading: false });
+        } catch (error) {
+            set({ error: error.response?.data?.message || "Error al obtener facturas", loading: false, billings: [] });
+        }
+    },
+
+    // ================= SECCIÓN RESTAURANTES =================
+    getRestaurants: async () => {
+        try {
+            set({ loading: true, error: null });
+            const response = await getRestaurantsRequest();
+            const data = response.data?.data || response.data || response;
+            set({ restaurants: Array.isArray(data) ? data : [], loading: false });
+        } catch (error) {
+            set({ error: "Error al cargar restaurantes", loading: false, restaurants: [] });
+        }
+    },
+
+    // ================= SECCIÓN MENÚS (PLATOS) =================
+    getMenus: async () => {
+        try {
+            set({ loading: true, error: null });
+            const response = await getDishesRequest();
+            const data = response.data?.data || response.data || response;
+            set({ menus: Array.isArray(data) ? data : [], loading: false });
+        } catch (error) {
+            set({ error: "Error al cargar el menú", loading: false, menus: [] });
+        }
+    },
+
+    // ================= SECCIÓN INVENTARIO =================
+    getInventory: async () => {
+        set({ inventory: [], loading: false });
+    },
+
+ // ================= SECCIÓN EVENTOS =================
+    getEvents: async () => {
+        set({ events: [], loading: false });
+    },
+
+    getReservations: async () => {
+        await get().getAllReservations();
+    },
+
+   
+    // ================= SECCIÓN ÓRDENES =================
+    getOrders: async () => {
+        try {
+            set({ loading: true, error: null });
+            
+            // Por ahora, como no hay endpoint en la API, inicializamos vacío
+            set({ 
+                orders: [], 
+                loading: false 
+            });
+        } catch (error) {
+            set({ 
+                error: "Error al cargar órdenes", 
+                loading: false, 
+                orders: [] 
+            });
+        }
+    }
+    
 }));
