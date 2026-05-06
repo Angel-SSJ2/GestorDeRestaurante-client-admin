@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { useAdminStore } from "../store/adminStore";
 import toast from "react-hot-toast";
 
-const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-
 export const UserDetailModal = ({ isOpen, onClose, user }) => {
     const { updateUserRole, loading } = useAdminStore();
     const [selectedRole, setSelectedRole] = useState("");
@@ -28,8 +26,6 @@ export const UserDetailModal = ({ isOpen, onClose, user }) => {
         }
     };
 
-    const avatarSrc = user.profilePicture || defaultAvatar;
-
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 px-3 sm:px-4">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-xl max-h-[90vh] flex flex-col overflow-hidden">
@@ -50,11 +46,17 @@ export const UserDetailModal = ({ isOpen, onClose, user }) => {
 
                     {/* USER INFO */}
                     <div className="flex items-center gap-4">
-                        <img
-                            src={avatarSrc}
-                            alt={user.username}
-                            className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
-                        />
+                        {user.profilePicture ? (
+                            <img
+                                src={user.profilePicture}
+                                alt={user.username}
+                                className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+                            />
+                        ) : (
+                            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-200">
+                                <span className="text-gray-600 text-2xl">👤</span>
+                            </div>
+                        )}
                         <div>
                             <p className="font-bold text-gray-900 text-lg">
                                 {`${user.name} ${user.surname}`}

@@ -9,9 +9,14 @@ import {
     updateUser as updateUserRequest,
     deleteUser as deleteUserRequest,
     getRestaurants as getRestaurantsRequest,
+    createRestaurant as createRestaurantRequest,
+    updateRestaurant as updateRestaurantRequest,
+    deleteRestaurant as deleteRestaurantRequest,
     getBillings as getBillingsRequest,
-    getDishes as getDishesRequest
+    getDishes as getDishesRequest,
+    createDish as createDishRequest
 } from "../../../shared/api";
+
 
 export const useAdminStore = create((set, get) => ({
     users: [],
@@ -46,6 +51,33 @@ export const useAdminStore = create((set, get) => ({
             set({ users: [newUser, ...get().users], loading: false });
         } catch (error) {
             set({ loading: false, error: error.response?.data?.message || "Error al crear usuario" });
+        }
+    },
+
+    updateUser: async (id, userData) => {
+        try {
+            set({ loading: true, error: null });
+            const response = await updateUserRequest(id, userData);
+            const updatedUser = response.data?.data || response.data || response;
+            set({
+                users: get().users.map((u) => (u._id === id ? updatedUser : u)),
+                loading: false
+            });
+        } catch (error) {
+            set({ loading: false, error: error.response?.data?.message || "Error al actualizar usuario" });
+        }
+    },
+
+    deleteUser: async (id) => {
+        try {
+            set({ loading: true, error: null });
+            await deleteUserRequest(id);
+            set({
+                users: get().users.filter((u) => u._id !== id),
+                loading: false
+            });
+        } catch (error) {
+            set({ loading: false, error: error.response?.data?.message || "Error al eliminar usuario" });
         }
     },
 
@@ -117,6 +149,44 @@ export const useAdminStore = create((set, get) => ({
         }
     },
 
+    saveRestaurant: async (formData) => {
+        try {
+            set({ loading: true, error: null });
+            const id = formData.get("id");
+            let response;
+            
+            if (id) {
+                // Update
+                response = await updateRestaurantRequest(id, formData);
+                const updatedRestaurant = response.data?.data || response.data || response;
+                set({
+                    restaurants: get().restaurants.map((r) => r._id === id ? updatedRestaurant : r),
+                    loading: false
+                });
+                return updatedRestaurant;
+            } else {
+                // Create
+                response = await createRestaurantRequest(formData);
+                const newRestaurant = response.data?.data || response.data || response;
+                set({ restaurants: [newRestaurant, ...(get().restaurants || [])], loading: false });
+                return newRestaurant;
+            }
+        } catch (error) {
+            set({ loading: false, error: error.response?.data?.message || "Error al guardar restaurante" });
+            throw error;
+        }
+    },
+
+    deleteRestaurant: async (id) => {
+        try {
+            set({ loading: true, error: null });
+            await deleteRestaurantRequest(id);
+            set({ restaurants: get().restaurants.filter((restaurant) => restaurant._id !== id), loading: false });
+        } catch (error) {
+            set({ loading: false, error: error.response?.data?.message || "Error al eliminar restaurante" });
+        }
+    },
+
     // ================= SECCIÓN MENÚS (PLATOS) =================
     getMenus: async () => {
         try {
@@ -126,6 +196,17 @@ export const useAdminStore = create((set, get) => ({
             set({ menus: Array.isArray(data) ? data : [], loading: false });
         } catch (error) {
             set({ error: "Error al cargar el menú", loading: false, menus: [] });
+        }
+    },
+
+    createDish: async (dishData) => {
+        try {
+            set({ loading: true, error: null });
+            const response = await createDishRequest(dishData);
+            const newDish = response.data?.data || response.data || response;
+            set({ menus: [newDish, ...get().menus], loading: false });
+        } catch (error) {
+            set({ loading: false, error: error.response?.data?.message || "Error al crear plato" });
         }
     },
 

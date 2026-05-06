@@ -111,6 +111,11 @@ const handleRefreshToken = async function (_error) {
   return Promise.reject(_error);
 };
 
+export const updateRestaurantRequest = async (id, formData) => {
+    return await axios.put(`/restaurant/${id}`, formData); 
+};
+
+
 axiosAuth.interceptors.response.use((res) => res, handleRefreshToken);
 axiosAdmin.interceptors.response.use((res) => res, handleRefreshToken);
 

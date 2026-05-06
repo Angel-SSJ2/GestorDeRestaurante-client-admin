@@ -30,12 +30,19 @@ export const Menus = () => {
             <div className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {menus.map((item) => (
                     <div key={item._id} className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 hover:scale-[1.02]">
-                        <div className="w-full h-52 bg-gray-100 relative">
-                            <img
-                                src={item.image || 'https://via.placeholder.com/400x300?text=No+Image'}
-                                alt={item.name}
-                                className="w-full h-full object-cover"
-                            />
+                        <div className="w-full h-52 bg-gray-100 relative flex items-center justify-center">
+                            {item.image ? (
+                                <img
+                                    src={item.image}
+                                    alt={item.name}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div className="text-gray-400 text-center">
+                                    <div className="text-6xl mb-2">🍽️</div>
+                                    <p className="text-sm">Sin imagen</p>
+                                </div>
+                            )}
                             <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg shadow text-main-blue font-bold">
                                 Q{parseFloat(item.price).toFixed(2)}
                             </div>

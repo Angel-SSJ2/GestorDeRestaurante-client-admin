@@ -2,28 +2,40 @@ import { useEffect, useState } from "react";
 import { useAdminStore } from "../../users/store/adminStore";
 import { Spinner } from "../../auth/components/Spinner";
 import { RestaurantModal } from "./Restaurants.Modal";
+import { toast } from "react-hot-toast";
+import { showConfirmToast } from "../../auth/components/ConfirmModal";
 
 export const Restaurantes = () => {
-    const { restaurants = [], loading, getRestaurants } = useAdminStore();
+    const { restaurants = [], loading, error, getRestaurants, deleteRestaurant } = useAdminStore();
+    const [selectedRestaurant, setSelectedRestaurant] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         getRestaurants();
-    }, []);
+    }, [getRestaurants]);
+
+    useEffect(() => {
+        if (error) {
+            toast.error(error);
+        }
+    }, [error]);
 
     if (loading && restaurants.length === 0) return <Spinner />;
 
     return (
         <div className="p-4">
-            {/* Cabecera consistente con Urban Central */}
+            {/* Cabecera */}
             <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
                 <div>
                     <h1 className="text-3xl font-bold text-main-blue tracking-tight">Gestión de Restaurantes</h1>
                     <p className="text-gray-500 text-sm font-medium">Administración de sucursales y sedes activas</p>
                 </div>
-                <button 
-                    onClick={() => setIsModalOpen(true)}
+                <button
                     className="bg-main-blue px-6 py-2.5 rounded-lg text-white font-bold hover:scale-105 transition-all shadow-lg"
+                    onClick={() => {
+                        setSelectedRestaurant(null);
+                        setIsModalOpen(true);
+                    }}
                 >
                     + Nuevo Restaurante
                 </button>
@@ -32,13 +44,21 @@ export const Restaurantes = () => {
             {/* Grid de Restaurantes */}
             <div className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {restaurants.map((res) => (
-                    <div key={res._id} className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden transition-all hover:shadow-xl">
-                        <div className="relative h-40">
-                            <img 
-                                src={res.logo || 'https://via.placeholder.com/400x200'} 
-                                alt={res.name} 
-                                className="w-full h-full object-cover"
-                            />
+                    <div key={res._id} className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden transition-all hover:shadow-xl hover:scale-[1.02]">
+                        <div className="w-full h-52 bg-gray-100 flex items-center justify-center relative">
+                            {res.image ? (
+                                <img
+
+                                    src={`https://res.cloudinary.com/dxnjptc1x/image/upload${res.image}`}
+                                    alt={res.name}
+                                    className="h-full w-full object-cover rounded-t-xl"
+                                />
+                            ) : (
+                                <div className="text-gray-400 text-center">
+                                    <div className="text-4xl mb-2">🏪</div>
+                                    <p className="text-sm">Sin Imagen</p>
+                                </div>
+                            )}
                             <div className="absolute top-3 right-3">
                                 <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black text-main-blue shadow-sm uppercase">
                                     Sucursal {res.phone?.slice(-4) || 'UC'}
@@ -62,14 +82,35 @@ export const Restaurantes = () => {
                                         <p className="font-semibold text-main-blue">{res.phone}</p>
                                     </div>
                                 </div>
+                                <div className="flex items-center text-sm bg-gray-50 p-2 rounded-md border border-gray-100">
+                                    <span className="mr-2">🕒</span>
+                                    <p className="text-xs text-gray-600">{res.schedule || "Horario no definido"}</p>
+                                </div>
                             </div>
 
-                            <div className="flex gap-3 mt-6">
-                                <button className="flex-1 py-2 rounded-lg border-2 border-main-blue text-main-blue font-bold hover:bg-blue-50 transition text-sm">
-                                    Configurar
+                            {/* BOTONES */}
+                            <div className="flex gap-3 mt-5">
+                                <button
+                                    className="flex-1 py-2 rounded-lg bg-main-blue text-white font-medium hover:opacity-90 transition"
+                                    onClick={() => {
+                                        setSelectedRestaurant(res);
+                                        setIsModalOpen(true);
+                                    }}
+                                >
+                                    ✏️ Editar
                                 </button>
-                                <button className="flex-1 py-2 rounded-lg bg-main-blue text-white font-bold hover:bg-blue-700 transition text-sm shadow-sm">
-                                    Ver Menú
+
+                                <button
+                                    className="flex-1 py-2 rounded-lg bg-red-600 text-white font-medium hover:bg-red-700 transition"
+                                    onClick={() =>
+                                        showConfirmToast({
+                                            title: "Eliminar Restaurante",
+                                            message: `¿Estás seguro de eliminar ${res.name}?`,
+                                            onConfirm: () => deleteRestaurant(res._id)
+                                        })
+                                    }
+                                >
+                                    🗑️ Eliminar
                                 </button>
                             </div>
                         </div>
@@ -85,7 +126,14 @@ export const Restaurantes = () => {
             )}
 
             {/* Modal de Acción */}
-            {isModalOpen && <RestaurantModal onClose={() => setIsModalOpen(false)} />}
+            <RestaurantModal
+                isOpen={isModalOpen}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setSelectedRestaurant(null);
+                }}
+                restaurant={selectedRestaurant}
+            />
         </div>
     );
 };

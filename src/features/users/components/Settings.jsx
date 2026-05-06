@@ -33,11 +33,17 @@ export const Settings = ({ users = [] }) => {
                                 <tr key={user.id} className="border-t hover:bg-gray-50 transition">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            <img
-                                                src={user.profilePicture || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
-                                                alt={user.username}
-                                                className="w-11 h-11 rounded-full object-cover ring-2 ring-gray-100"
-                                            />
+                                            {user.profilePicture ? (
+                                                <img
+                                                    src={user.profilePicture}
+                                                    alt={user.username}
+                                                    className="w-11 h-11 rounded-full object-cover ring-2 ring-gray-100"
+                                                />
+                                            ) : (
+                                                <div className="w-11 h-11 rounded-full bg-gray-200 flex items-center justify-center ring-2 ring-gray-100">
+                                                    <span className="text-gray-600 text-lg">👤</span>
+                                                </div>
+                                            )}
                                             <div>
                                                 <p className="font-semibold text-gray-800">{user.username}</p>
                                                 <p className="text-xs text-gray-500">ID: {user.id}</p>
@@ -69,11 +75,17 @@ export const Settings = ({ users = [] }) => {
                     {users.map((user) => (
                         <div key={user.id} className="p-4 flex flex-col gap-3">
                             <div className="flex items-center gap-3">
-                                <img
-                                    src={user.profilePicture || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
-                                    alt={user.username}
-                                    className="w-12 h-12 rounded-full object-cover"
-                                />
+                                {user.profilePicture ? (
+                                    <img
+                                        src={user.profilePicture}
+                                        alt={user.username}
+                                        className="w-12 h-12 rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
+                                        <span className="text-gray-600 text-lg">👤</span>
+                                    </div>
+                                )}
                                 <div>
                                     <p className="font-semibold text-gray-800">{user.username}</p>
                                     <p className="text-xs text-gray-500">{user.email}</p>

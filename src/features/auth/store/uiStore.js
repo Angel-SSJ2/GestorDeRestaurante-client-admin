@@ -15,4 +15,4 @@ export const useUIStore = create((set) => ({
     }),
 
     closeConfirm: () => set({ confirm: null })
-}));
+}));    

@@ -6,15 +6,11 @@ export const getUsers = async () => {
 };
 
 export const createUser = async (data) => {
-    return await axiosAdmin.post("/User", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-    });
+    return await axiosAdmin.post("/User", data);
 };
 
 export const updateUser = async (id, data) => {
-    return await axiosAdmin.put(`/User/${id}`, data, {
-        headers: { "Content-Type": "multipart/form-data" },
-    });
+    return await axiosAdmin.put(`/User/${id}`, data);
 };
 
 export const deleteUser = async (id) => {
@@ -23,18 +19,26 @@ export const deleteUser = async (id) => {
 
 // ================= RESTAURANTES ================
 export const getRestaurants = async () => {
-    return await axiosAdmin.get("/Restaurant");
+    return await axiosAdmin.get("/restaurants");
 };
 
 export const createRestaurant = async (data) => {
-    return await axiosAdmin.post("/Restaurant", data, {
-        headers: { "Content-Type": "multipart/form-data" },
+    return await axiosAdmin.post("/restaurants", data, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
     });
 };
 
+export const deleteRestaurant = async (id) => {
+    return await axiosAdmin.delete(`/restaurants/${id}`);
+};
+
 export const updateRestaurant = async (id, data) => {
-    return await axiosAdmin.put(`/Restaurant/${id}`, data, {
-        headers: { "Content-Type": "multipart/form-data" },
+    return await axiosAdmin.put(`/restaurants/${id}`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
     });
 };
 
@@ -44,9 +48,7 @@ export const getDishes = async () => {
 };
 
 export const createDish = async (data) => {
-    return await axiosAdmin.post("/Dish", data, {
-        headers: { "Content-Type": "multipart/form-data" }, 
-    });
+    return await axiosAdmin.post("/Dish", data);
 };
 
 // ================= MESAS ================
@@ -55,9 +57,7 @@ export const getTables = async () => {
 };
 
 export const createTable = async (data) => {
-    return await axiosAdmin.post("/Table", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-    });
+    return await axiosAdmin.post("/Table", data);
 };
 
 // ================= RESERVACIONES =================

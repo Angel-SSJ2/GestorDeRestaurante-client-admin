@@ -15,7 +15,6 @@ export const useAuthStore = create(
             isLoadingAuth: true,
             isAuthenticated: false,
 
-            // Verifica si el usuario es Admin, si no, lo saca
             checkAuth: () => {
                 const token = get().token;
                 const user = get().user;
@@ -44,12 +43,11 @@ export const useAuthStore = create(
                 toast.success("Sesión cerrada");
             },
 
-            login: async (emailOrUsername, password) => {
+            login: async ({ EmailOrUsername, Password } = {}) => {
                 set({ loading: true, error: null });
                 try {
-                    const { data } = await loginRequest({ emailOrUsername, password });
+                    const { data } = await loginRequest({ EmailOrUsername, Password });
 
-                    // Bloqueo de seguridad: Solo ADMIN_ROLE entra aquí
                     const role = data?.userDetails?.role;
                     if (role !== "ADMIN_ROLE") {
                         const message = "No tienes permisos para acceder como administrador";

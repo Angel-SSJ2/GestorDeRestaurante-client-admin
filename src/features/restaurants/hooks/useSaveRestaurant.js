@@ -4,21 +4,35 @@ import { toast } from "react-hot-toast";
 export const useSaveRestaurant = () => {
     const saveRestaurantAction = useAdminStore((state) => state.saveRestaurant);
 
-    const saveRestaurant = async (data) => {
+    const saveRestaurant = async (data, id) => {
         try {
             const formData = new FormData();
+            
+            if (id) {
+                formData.append("id", id);
+            } else if (data.id || data._id) {
+                formData.append("id", data.id || data._id);
+            }
+
             formData.append("name", data.name);
             formData.append("address", data.address);
             formData.append("phone", data.phone);
             formData.append("schedule", data.schedule);
             formData.append("category", data.category);
-            if (data.image) formData.append("image", data.image);
 
+            if (data.image && data.image[0] instanceof File) {
+                formData.append("image", data.image[0]);
+            }
             await saveRestaurantAction(formData);
-            toast.success("Sucursal registrada exitosamente");
+
+            toast.success("Operación exitosa");
             return true;
         } catch (error) {
-            toast.error(error.response?.data?.message || "Error al registrar sucursal");
+            console.error("ERROR COMPLETO:", error);
+            console.log("DATA:", error.response?.data);
+            console.log("STATUS:", error.response?.status);
+            const errorMsg = error.response?.data?.message || "Error al procesar la sucursal";
+            toast.error(errorMsg);
             return false;
         }
     };

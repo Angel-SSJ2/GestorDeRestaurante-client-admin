@@ -1,4 +1,4 @@
-import {Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { AuthPage } from "../features/auth/pages/AuthPage.jsx";
 import { DashboardPage } from "../app/layouts/DashboardPage.jsx";
 import { Users } from "../features/users/components/Users.jsx";
@@ -9,10 +9,10 @@ import { Events } from "../features/events/components/Events.jsx";
 import { Reservations } from "../features/reservations/components/Reservations.jsx";
 import { Tables } from "../features/tables/components/Tables.jsx";
 import { Menus } from "../features/menus/components/Menus.jsx";
-import { Restaurantes } from "../features/restaurants/components/Restaurants.jsx"
+import { Restaurantes } from "../features/restaurants/components/Restaurants"
 
 export const AppRoutes = () => {
-    return(
+    return (
         <Routes>
             {/*Publicas*/}
             <Route path="/" element={<AuthPage />} />
@@ -27,7 +27,7 @@ export const AppRoutes = () => {
                 <Route path="events" element={<Events />} />
                 <Route path="billings" element={<Billings />} />
                 <Route path="inventory" element={<Inventory />} />
-                
+
             </Route>
 
         </Routes>

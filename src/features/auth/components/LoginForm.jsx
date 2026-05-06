@@ -17,20 +17,18 @@ export const LoginForm = ({ onForgotPassword, onRegister }) => {
     } = useForm();
 
     const onSubmit = async (formData) => {
-    const res = await login(formData);
-    
-    // AGREGA ESTO PARA VER QUÉ RECIBES
-    console.log("Respuesta completa del servidor/store:", res);
-    
-    if (res?.succes) { // El ? evita que el código rompa si res es undefined
-        navigate("/dashboard");
-        toast.success("¡Bienvenido de nuevo!");
-    } else {
-        // Esto te dirá qué está fallando realmente
-        console.error("Error en el login, objeto de respuesta:", res);
-        toast.error(res?.error || "Error al iniciar sesión");
-    }
-};
+        const res = await login(formData);
+
+        console.log("Respuesta completa del servidor/store:", res);
+
+        if (res?.success) {
+            navigate("/dashboard");
+            toast.success("¡Bienvenido de nuevo!");
+        } else {
+            console.error("Error en el login, objeto de respuesta:", res);
+            toast.error(res?.error || "Error al iniciar sesión");
+        }
+    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
@@ -42,12 +40,12 @@ export const LoginForm = ({ onForgotPassword, onRegister }) => {
                 <input
                     type="text"
                     placeholder="correo@ejemplo.com o usuario"
-                    className={`w-full px-3 py-2 text-sm border ${errors.emailOrUsername ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500`}
-                    {...register("emailOrUsername", {
+                    className={`w-full px-3 py-2 text-sm border ${errors.EmailOrUsername ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500`}
+                    {...register("EmailOrUsername", {
                         required: "Este campo es obligatorio",
                     })}
                 />
-                {errors.emailOrUsername && <span className="text-red-500 text-xs">{errors.emailOrUsername.message}</span>}
+                {errors.EmailOrUsername && <span className="text-red-500 text-xs">{errors.EmailOrUsername.message}</span>}
             </div>
 
             {/* Sección de contraseña */}
@@ -58,12 +56,12 @@ export const LoginForm = ({ onForgotPassword, onRegister }) => {
                 <input
                     type="password"
                     placeholder="••••••••"
-                    className={`w-full px-3 py-2 text-sm border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500`}
-                    {...register("password", {
+                    className={`w-full px-3 py-2 text-sm border ${errors.Password ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500`}
+                    {...register("Password", {
                         required: "La contraseña es obligatoria",
                     })}
                 />
-                {errors.password && <span className="text-red-500 text-xs">{errors.password.message}</span>}
+                {errors.Password && <span className="text-red-500 text-xs">{errors.Password.message}</span>}
             </div>
 
             <button
@@ -85,10 +83,10 @@ export const LoginForm = ({ onForgotPassword, onRegister }) => {
                     </button>
                 </p>
                 <p className="text-xs text-gray-500">
-                    ¿No tienes cuenta? 
-                    <button 
-                        type="button" 
-                        onClick={onRegister} 
+                    ¿No tienes cuenta?
+                    <button
+                        type="button"
+                        onClick={onRegister}
                         className="ml-1 text-main-blue hover:underline font-medium"
                     >
                         Regístrate
