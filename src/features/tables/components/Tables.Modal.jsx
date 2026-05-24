@@ -1,20 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAdminStore } from "../../users/store/adminStore";
 import { useSaveTable } from "../hooks/useSaveTable";
 
-export const TableModal = ({ onClose }) => {
-    const { restaurants } = useAdminStore(); 
+export const TableModal = ({ onClose, table }) => {
+    const { restaurants, getRestaurants } = useAdminStore(); 
     const { saveTable } = useSaveTable();
     const [formData, setFormData] = useState({
-        sucursalId: '',
-        tableNumber: '',
-        capacity: 4,
-        status: 'DISPONIBLE'
+        sucursalId: table?.restaurant?._id || table?.restaurant || table?.sucursalId || '',
+        tableNumber: table?.number ?? table?.tableNumber ?? '',
+        capacity: table?.capacity || 4,
+        status: table?.status?.toString().toLowerCase() || 'disponible'
     });
+
+    useEffect(() => {
+        if (restaurants.length === 0) {
+            getRestaurants();
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await saveTable(formData);
+        if (!formData.sucursalId) {
+            alert('Por favor selecciona una sucursal');
+            return;
+        }
+        const payload = {
+            restaurant: formData.sucursalId,
+            number: Number(formData.tableNumber),
+            capacity: Number(formData.capacity),
+            status: formData.status.toLowerCase()
+        };
+
+        const success = await saveTable(payload, table?._id);
         if (success) onClose();
     };
 
@@ -22,8 +39,10 @@ export const TableModal = ({ onClose }) => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 px-3">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
                 <div className="p-5 text-white bg-main-blue shadow-md">
-                    <h2 className="text-xl font-bold">Configurar Mesa</h2>
-                    <p className="text-xs opacity-80 font-medium">Define los detalles físicos de la mesa</p>
+                    <h2 className="text-xl font-bold">{table ? "Editar Mesa" : "Configurar Mesa"}</h2>
+                    <p className="text-xs opacity-80 font-medium">
+                        {table ? "Actualiza los datos de la mesa" : "Define los detalles físicos de la mesa"}
+                    </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -48,6 +67,7 @@ export const TableModal = ({ onClose }) => {
                             <input 
                                 type="number"
                                 required
+                                min="1"
                                 value={formData.tableNumber}
                                 onChange={(e) => setFormData({...formData, tableNumber: e.target.value})}
                                 className="px-3 py-2 rounded-lg border-2 border-gray-100 outline-none focus:border-main-blue transition"
@@ -60,6 +80,7 @@ export const TableModal = ({ onClose }) => {
                             <input 
                                 type="number"
                                 min="1"
+                                max="10"
                                 required
                                 value={formData.capacity}
                                 onChange={(e) => setFormData({...formData, capacity: e.target.value})}
@@ -75,9 +96,10 @@ export const TableModal = ({ onClose }) => {
                             onChange={(e) => setFormData({...formData, status: e.target.value})}
                             className="px-3 py-2 rounded-lg border-2 border-gray-100 outline-none focus:border-main-blue transition"
                         >
-                            <option value="DISPONIBLE">Disponible</option>
-                            <option value="OCUPADA">Ocupada</option>
-                            <option value="RESERVADA">Reservada</option>
+                            <option value="disponible">Disponible</option>
+                            <option value="ocupada">Ocupada</option>
+                            <option value="reservada">Reservada</option>
+                            <option value="inactiva">Inactiva</option>
                         </select>
                     </div>
 

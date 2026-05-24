@@ -29,11 +29,11 @@ export const Settings = ({ users = [] }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user) => (
-                                <tr key={user.id} className="border-t hover:bg-gray-50 transition">
+                            {users.map((user, index) => (
+                                <tr key={user.id || user._id || `set-${user.username}-${index}`} className="border-t hover:bg-gray-50 transition">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
-                                            {user.profilePicture ? (
+                                            {user.profilePicture && !user.profilePicture.includes("default-avatar") ? (
                                                 <img
                                                     src={user.profilePicture}
                                                     alt={user.username}
@@ -46,7 +46,7 @@ export const Settings = ({ users = [] }) => {
                                             )}
                                             <div>
                                                 <p className="font-semibold text-gray-800">{user.username}</p>
-                                                <p className="text-xs text-gray-500">ID: {user.id}</p>
+                                                <p className="text-xs text-gray-500">ID: {user._id || user.id}</p>
                                             </div>
                                         </div>
                                     </td>
@@ -72,10 +72,10 @@ export const Settings = ({ users = [] }) => {
 
                 {/* CARDS (mobile) */}
                 <div className="md:hidden divide-y">
-                    {users.map((user) => (
-                        <div key={user.id} className="p-4 flex flex-col gap-3">
+                    {users.map((user, index) => (
+                        <div key={user.id || user._id || `m-set-${user.username}-${index}`} className="p-4 flex flex-col gap-3">
                             <div className="flex items-center gap-3">
-                                {user.profilePicture ? (
+                                {user.profilePicture && !user.profilePicture.includes("default-avatar") ? (
                                     <img
                                         src={user.profilePicture}
                                         alt={user.username}

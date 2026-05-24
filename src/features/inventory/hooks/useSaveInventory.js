@@ -2,18 +2,11 @@ import { useAdminStore } from "../../users/store/adminStore";
 import { toast } from "react-hot-toast";
 
 export const useSaveInventory = () => {
-    const saveInventoryItemAction = useAdminStore((state) => state.saveInventoryItem);
+    const { saveInventory, updateInventory, restockInventory } = useAdminStore();
 
     const saveInventoryItem = async (data) => {
         try {
-            const formData = new FormData();
-            formData.append("productName", data.productName);
-            formData.append("quantity", data.quantity);
-            formData.append("unit", data.unit);
-            formData.append("location", data.location);
-            formData.append("isActive", data.isActive);
-
-            await saveInventoryItemAction(formData);
+            await saveInventory(data);
             toast.success("Insumo registrado correctamente");
             return true;
         } catch (error) {
@@ -22,5 +15,27 @@ export const useSaveInventory = () => {
         }
     };
 
-    return { saveInventoryItem };
+    const updateInventoryItem = async (id, data) => {
+        try {
+            await updateInventory(id, data);
+            toast.success("Insumo actualizado correctamente");
+            return true;
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Error al actualizar el insumo");
+            return false;
+        }
+    };
+
+    const restockInventoryItem = async (id, quantityToAdd) => {
+        try {
+            await restockInventory(id, quantityToAdd);
+            toast.success("Reabastecimiento completado correctamente");
+            return true;
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Error al reabastecer el insumo");
+            return false;
+        }
+    };
+
+    return { saveInventoryItem, updateInventoryItem, restockInventoryItem };
 };

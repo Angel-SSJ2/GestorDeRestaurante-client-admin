@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSaveMenu } from "../hooks/useSaveMenu";
 
-export const MenuModal = ({ onClose }) => {
+export const MenuModal = ({ onClose, menuItem }) => {
     const { saveMenu } = useSaveMenu();
     const [preview, setPreview] = useState(null);
     const [formData, setFormData] = useState({
@@ -11,6 +11,30 @@ export const MenuModal = ({ onClose }) => {
         description: '',
         image: null
     });
+
+    const getImageUrl = (imagePath) => {
+        if (!imagePath) return null;
+        if (typeof imagePath !== 'string') return null;
+        if (imagePath.startsWith('http') || imagePath.startsWith('blob:')) return imagePath;
+        // Si no es Cloudinary, probamos con el servidor local
+        const baseUrl = "http://localhost:3003";
+        return `${baseUrl}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
+    };
+
+    useEffect(() => {
+        if (menuItem) {
+            setFormData({
+                name: menuItem.name || '',
+                price: menuItem.price || '',
+                category: menuItem.category || '',
+                description: menuItem.description || '',
+                image: null
+            });
+            if (menuItem.image) {
+                setPreview(getImageUrl(menuItem.image));
+            }
+        }
+    }, [menuItem]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,7 +51,7 @@ export const MenuModal = ({ onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await saveMenu(formData);
+        const success = await saveMenu(formData, menuItem?._id);
         if (success) onClose();
     };
 
@@ -35,8 +59,12 @@ export const MenuModal = ({ onClose }) => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 px-3 sm:px-4">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg md:max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
                 <div className="p-4 sm:p-5 text-white bg-main-blue">
-                    <h2 className="text-xl sm:text-2xl font-bold">Nuevo Menú</h2>
-                    <p className="text-xs sm:text-sm opacity-80">Completa la información del platillo</p>
+                    <h2 className="text-xl sm:text-2xl font-bold">
+                        {menuItem ? "Editar Platillo" : "Nuevo Platillo"}
+                    </h2>
+                    <p className="text-xs sm:text-sm opacity-80">
+                        {menuItem ? "Actualiza los datos del platillo" : "Completa la información del platillo"}
+                    </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5 overflow-y-auto">
@@ -69,6 +97,8 @@ export const MenuModal = ({ onClose }) => {
                                 type="number"
                                 name="price"
                                 required
+                                min="0"
+                                step="0.01"
                                 value={formData.price}
                                 onChange={handleChange}
                                 className="w-full px-3 py-2 rounded-lg border-2 border-main-blue/20 outline-none focus:border-main-blue bg-gray-50 transition"
@@ -86,10 +116,10 @@ export const MenuModal = ({ onClose }) => {
                                 className="w-full px-3 py-2 rounded-lg border-2 border-main-blue/20 outline-none focus:border-main-blue bg-gray-50 transition"
                             >
                                 <option value="">Seleccione...</option>
-                                <option value="ENTRADA">Entrada</option>
-                                <option value="PLATO_PRINCIPAL">Plato Principal</option>
-                                <option value="BEBIDA">Bebida</option>
-                                <option value="POSTRE">Postre</option>
+                                <option value="entrada">Entrada</option>
+                                <option value="plato fuerte">Plato Fuerte</option>
+                                <option value="bebida">Bebida</option>
+                                <option value="postre">Postre</option>
                             </select>
                         </div>
 
@@ -118,7 +148,7 @@ export const MenuModal = ({ onClose }) => {
                     <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t">
                         <button type="button" onClick={onClose} className="px-4 py-2 text-gray-500 font-bold">Cancelar</button>
                         <button type="submit" className="px-6 py-2 bg-main-blue text-white font-bold rounded-lg shadow hover:opacity-90 transition">
-                            Guardar Menú
+                            {menuItem ? 'Actualizar Platillo' : 'Guardar Platillo'}
                         </button>
                     </div>
                 </form>

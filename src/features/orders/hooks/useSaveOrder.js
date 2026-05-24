@@ -6,14 +6,16 @@ export const useSaveOrder = () => {
 
     const saveOrder = async (data) => {
         try {
-            const formData = new FormData();
-            formData.append("clientName", data.clientName);
-            formData.append("total", data.total);
-            formData.append("status", data.status);
-            formData.append("location", data.location);
-            if (data.image) formData.append("image", data.image);
+            const payload = {
+                restaurant: data.restaurant,
+                user: data.user,
+                items: data.items.map(item => ({
+                    dish: item.dish,
+                    quantity: Number(item.quantity)
+                }))
+            };
 
-            await saveOrderAction(formData);
+            await saveOrderAction(payload);
             toast.success("Orden creada correctamente");
             return true;
         } catch (error) {

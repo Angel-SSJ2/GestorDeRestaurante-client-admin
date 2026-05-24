@@ -4,20 +4,22 @@ import { toast } from "react-hot-toast";
 export const useSaveReservation = () => {
     const saveReservationAction = useAdminStore((state) => state.saveReservation);
 
-    const saveReservation = async (data) => {
+    const saveReservation = async (data, id) => {
         try {
-            const formData = new FormData();
-            formData.append("sucursalId", data.sucursalId);
-            formData.append("clientName", data.clientName);
-            formData.append("date", data.date);
-            formData.append("pax", data.pax);
-            if (data.image) formData.append("image", data.image);
+            const payload = {
+                restaurant: data.restaurant,
+                table: data.table,
+                date: data.date,
+                guests: Number(data.guests || data.pax),
+                user: data.user,
+                status: data.status || 'pendiente'
+            };
 
-            await saveReservationAction(formData);
-            toast.success("Reservación confirmada");
+            await saveReservationAction(payload, id);
+            toast.success("Reservación guardada con éxito");
             return true;
         } catch (error) {
-            toast.error(error.response?.data?.message || "Error al crear reservación");
+            toast.error(error.response?.data?.message || "Error al guardar reservación");
             return false;
         }
     };

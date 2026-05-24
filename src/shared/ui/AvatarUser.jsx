@@ -28,7 +28,7 @@ export const AvatarUser = () => {
     }
 
     // Lógica para la imagen de perfil
-    const avatarSrc = user?.profilePicture && user.profilePicture.trim() !== "" 
+    const avatarSrc = user?.profilePicture && user.profilePicture.trim() !== "" && !user.profilePicture.includes("default-avatar")
         ? user.profilePicture 
         : defaultAvatar;
 

@@ -31,7 +31,12 @@ export const useSaveRestaurant = () => {
             console.error("ERROR COMPLETO:", error);
             console.log("DATA:", error.response?.data);
             console.log("STATUS:", error.response?.status);
-            const errorMsg = error.response?.data?.message || "Error al procesar la sucursal";
+            let errorMsg = error.response?.data?.error || error.response?.data?.message || "Error al procesar la sucursal";
+            
+            if (typeof errorMsg === 'string' && errorMsg.includes("E11000") && errorMsg.includes("name")) {
+                errorMsg = `El nombre de restaurante "${data.name}" ya se encuentra registrado. Por favor, usa otro.`;
+            }
+            
             toast.error(errorMsg);
             return false;
         }

@@ -7,9 +7,10 @@ const AuthPage = () => {
     const [view, setView] = useState("login");
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-blue-200 p-4">
-
-            <div className="w-full max-w-xl bg-white rounded-xl shadow-lg border border-gray-900 p-6 md:p-10">
+        <div className="min-h-screen flex items-center justify-center p-4"
+        style={{ backgroundImage: "url('/src/assets/img/fondo.png')" }}
+        >
+            <div className="w-full z-10 max-w-xl bg-white rounded-xl shadow-2xl border-4 border-blue-900 p-6 md:p-10">
 
                 {/* LOGO */}
                 <div className="flex justify-center mb-6">

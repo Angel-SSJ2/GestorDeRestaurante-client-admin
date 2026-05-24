@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAdminStore } from "../store/adminStore";
 import toast from "react-hot-toast";
 
+
 export const UserDetailModal = ({ isOpen, onClose, user }) => {
     const { updateUserRole, loading } = useAdminStore();
     const [selectedRole, setSelectedRole] = useState("");
@@ -16,10 +17,11 @@ export const UserDetailModal = ({ isOpen, onClose, user }) => {
 
     const handleSave = async () => {
         if (selectedRole === user.role) {
-            return onClose(); 
+            return onClose();
         }
 
-        const success = await updateUserRole(user.id, selectedRole);
+        const userId = user._id || user.id;
+        const success = await updateUserRole(userId, selectedRole);
         if (success) {
             toast.success("Rol actualizado correctamente");
             onClose();
@@ -46,15 +48,19 @@ export const UserDetailModal = ({ isOpen, onClose, user }) => {
 
                     {/* USER INFO */}
                     <div className="flex items-center gap-4">
-                        {user.profilePicture ? (
+                        {user.profilePicture && !user.profilePicture.includes("default-avatar") ? (
                             <img
                                 src={user.profilePicture}
                                 alt={user.username}
                                 className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
                             />
                         ) : (
-                            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-200">
-                                <span className="text-gray-600 text-2xl">👤</span>
+                            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-200 overflow-hidden">
+                                <img
+                                    src="../../../assets/img/avatarDefault.png"
+                                    alt="Avatar"
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                         )}
                         <div>
@@ -69,7 +75,7 @@ export const UserDetailModal = ({ isOpen, onClose, user }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div className="bg-gray-50 rounded-lg p-3">
                             <p className="text-xs text-gray-500 uppercase font-bold">ID del Sistema</p>
-                            <p className="text-sm font-medium break-all">{user.id}</p>
+                            <p className="text-sm font-medium break-all">{user._id || user.id}</p>
                         </div>
 
                         <div className="bg-gray-50 rounded-lg p-3">
@@ -100,6 +106,9 @@ export const UserDetailModal = ({ isOpen, onClose, user }) => {
                         >
                             <option value="USER_ROLE">USER_ROLE</option>
                             <option value="ADMIN_ROLE">ADMIN_ROLE</option>
+                            <option value="WAITER_ROLE">WAITER_ROLE</option>
+                            <option value="KITCHEN_ROLE">KITCHEN_ROLE</option>
+                            <option value="CLIENT">CLIENT</option>
                         </select>
                     </div>
                 </div>

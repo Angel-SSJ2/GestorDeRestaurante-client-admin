@@ -8,7 +8,7 @@ export const ForgotPasswordForm = ({ onBack }) => {
                 <input
                     type="email"
                     placeholder="correo@ejemplo.com"
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 text-sm border-3 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
             </div>
 

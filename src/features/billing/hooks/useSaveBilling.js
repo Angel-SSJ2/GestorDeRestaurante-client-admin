@@ -6,15 +6,13 @@ export const useSaveBilling = () => {
 
     const saveBilling = async (data) => {
         try {
-            const formData = new FormData();
-            formData.append("order", data.orderId);
-            formData.append("paymentMethod", data.paymentMethod);
-            
-            if (data.receiptPhoto) {
-                formData.append("image", data.receiptPhoto);
-            }
+            const payload = {
+                order: data.orderId,
+                paymentMethod: data.paymentMethod,
+                amount: Number(data.amount)
+            };
 
-            await saveBillingAction(formData);
+            await saveBillingAction(payload);
             toast.success("Factura generada y orden actualizada");
             return true;
         } catch (error) {

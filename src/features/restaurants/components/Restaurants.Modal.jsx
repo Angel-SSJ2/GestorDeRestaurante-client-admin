@@ -149,8 +149,9 @@ export const RestaurantModal = ({ isOpen, onClose, restaurant }) => {
               <input
                 className="w-full px-3 py-2 rounded-lg border-2 border-gray-300 bg-gray-50 focus:border-blue-500 outline-none transition"
                 placeholder="Ej: 08:00 - 20:00"
-                {...register("schedule")}
+                {...register("schedule", { required: "El horario es obligatorio" })}
               />
+              {errors.schedule && <p className="text-red-600 text-xs mt-1">{errors.schedule.message}</p>}
             </div>
 
             {/* Imagen/Logo */}

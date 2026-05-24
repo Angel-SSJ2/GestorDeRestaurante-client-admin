@@ -44,26 +44,22 @@ export const Restaurantes = () => {
             {/* Grid de Restaurantes */}
             <div className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {restaurants.map((res) => (
-                    <div key={res._id} className="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden transition-all hover:shadow-xl hover:scale-[1.02]">
-                        <div className="w-full h-52 bg-gray-100 flex items-center justify-center relative">
+                    <div key={res._id} className="bg-white rounded-xl shadow-md border-3 border-blue-900 overflow-hidden transition-all hover:shadow-xl hover:scale-[1.02]">
+                        <div className="w-full h-52 bg-gray-100 border-b-3 border-blue-900 flex items-center justify-center relative">
                             {res.image ? (
                                 <img
 
-                                    src={`https://res.cloudinary.com/dxnjptc1x/image/upload${res.image}`}
+                                    src={res.image}
                                     alt={res.name}
                                     className="h-full w-full object-cover rounded-t-xl"
                                 />
                             ) : (
                                 <div className="text-gray-400 text-center">
-                                    <div className="text-4xl mb-2">🏪</div>
+                                    <div className="text-4xl mb-2">-</div>
                                     <p className="text-sm">Sin Imagen</p>
                                 </div>
                             )}
-                            <div className="absolute top-3 right-3">
-                                <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-black text-main-blue shadow-sm uppercase">
-                                    Sucursal {res.phone?.slice(-4) || 'UC'}
-                                </span>
-                            </div>
+                            
                         </div>
 
                         <div className="p-5">

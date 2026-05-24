@@ -40,7 +40,7 @@ export const LoginForm = ({ onForgotPassword, onRegister }) => {
                 <input
                     type="text"
                     placeholder="correo@ejemplo.com o usuario"
-                    className={`w-full px-3 py-2 text-sm border ${errors.EmailOrUsername ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full px-3 py-2 text-sm border-3 ${errors.EmailOrUsername ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500`}
                     {...register("EmailOrUsername", {
                         required: "Este campo es obligatorio",
                     })}
@@ -56,7 +56,7 @@ export const LoginForm = ({ onForgotPassword, onRegister }) => {
                 <input
                     type="password"
                     placeholder="••••••••"
-                    className={`w-full px-3 py-2 text-sm border ${errors.Password ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500`}
+                    className={`w-full px-3 py-2 text-sm border-3 ${errors.Password ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-blue-500`}
                     {...register("Password", {
                         required: "La contraseña es obligatoria",
                     })}
