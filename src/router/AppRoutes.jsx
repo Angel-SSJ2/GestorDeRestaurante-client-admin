@@ -10,26 +10,31 @@ import { Reservations } from "../features/reservations/components/Reservations.j
 import { Tables } from "../features/tables/components/Tables.jsx";
 import { Menus } from "../features/menus/components/Menus.jsx";
 import { Restaurantes } from "../features/restaurants/components/Restaurants"
+import { ProtectedRoute } from "../shared/components/layout/ProtectedRoute.jsx";
+import { PublicRoute } from "../shared/components/layout/PublicRoute.jsx";
 
 export const AppRoutes = () => {
     return (
         <Routes>
-            {/*Publicas*/}
-            <Route path="/" element={<AuthPage />} />
-
-            <Route path="/dashboard/*" element={<DashboardPage />}>
-                <Route path="restaurants" element={<Restaurantes />} />
-                <Route path="reservations" element={<Reservations />} />
-                <Route path="menus" element={<Menus />} />
-                <Route path="tables" element={<Tables />} />
-                <Route path="users" element={<Users />} />
-                <Route path="orders" element={<Orders />} />
-                <Route path="events" element={<Events />} />
-                <Route path="billings" element={<Billings />} />
-                <Route path="inventory" element={<Inventory />} />
-
+            {/* Publicas: Solo para usuarios NO autenticados */}
+            <Route element={<PublicRoute />}>
+                <Route path="/" element={<AuthPage />} />
             </Route>
 
+            {/* Protegidas: Solo para usuarios autenticados */}
+            <Route element={<ProtectedRoute />}>
+                <Route path="/dashboard/*" element={<DashboardPage />}>
+                    <Route path="restaurants" element={<Restaurantes />} />
+                    <Route path="reservations" element={<Reservations />} />
+                    <Route path="menus" element={<Menus />} />
+                    <Route path="tables" element={<Tables />} />
+                    <Route path="users" element={<Users />} />
+                    <Route path="orders" element={<Orders />} />
+                    <Route path="events" element={<Events />} />
+                    <Route path="billings" element={<Billings />} />
+                    <Route path="inventory" element={<Inventory />} />
+                </Route>
+            </Route>
         </Routes>
     );
 }

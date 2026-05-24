@@ -4,7 +4,7 @@ export const RegisterForm = ({ onBack }) => {
         <form className="space-y-5">
             <div>
                 <label className="block text-sm font-medium text-gray-800 mb-1.5">
-                    Email   
+                    Email
                 </label>
                 <input className="w-full px-3 py-2 text-sm border-3 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
             </div>
@@ -27,33 +27,36 @@ export const RegisterForm = ({ onBack }) => {
                 <label className="block text-sm font-medium text-gray-800 mb-1.5">
                     Contraseña
                 </label>
-                <input 
-                    type="password" 
+                <input
+                    type="password"
                     className="w-full px-3 py-2 text-sm border-3 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
             </div>
 
-              <div>
+            <div>
                 <label className="block text-sm font-medium text-gray-800 mb-1.5">
                     Numero de Telefono
                 </label>
                 <input className="w-full px-3 py-2 text-sm border-3 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
             </div>
 
-            <button className="w-full bg-main-blue hover:opacity-90 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 text-sm">
+            <button
+                type="button"
+                className="w-full bg-main-blue hover:opacity-90 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 text-sm"
+            >
                 Registrarse
             </button>
 
-            <p className="text-center text-sm">
+            <p className="text-center text-sm text-gray-600">
                 <button
                     type="button"
-                    onClick={onBack} 
+                    onClick={onBack}
                     className="text-main-blue hover:underline"
                 >
                     ¿Ya tienes cuenta?
                 </button>
             </p>
-            
+
         </form>
     );
 }

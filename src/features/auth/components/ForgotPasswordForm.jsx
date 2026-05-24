@@ -13,7 +13,7 @@ export const ForgotPasswordForm = ({ onBack }) => {
             </div>
 
             <button
-                type="submit"
+                type="button"
                 className="w-full bg-main-blue text-white py-2.5 px-4 rounded-lg text-sm font-medium hover:opacity-90 transition"
             >
                 Enviar correo

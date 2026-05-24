@@ -1,29 +1,41 @@
 import { useState, useEffect } from "react";
 import { useAdminStore } from "../store/adminStore";
 import toast from "react-hot-toast";
+import defaultAvatar from "../../../assets/img/avatarDefault.png";
 
 
 export const UserDetailModal = ({ isOpen, onClose, user }) => {
-    const { updateUserRole, loading } = useAdminStore();
+    const { updateUser, loading } = useAdminStore();
     const [selectedRole, setSelectedRole] = useState("");
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState("");
 
     useEffect(() => {
         if (user) {
             setSelectedRole(user.role);
+            setImageFile(null);
+            setImagePreview("");
         }
     }, [user]);
 
     if (!isOpen || !user) return null;
 
     const handleSave = async () => {
-        if (selectedRole === user.role) {
+        if (selectedRole === user.role && !imageFile) {
             return onClose();
         }
 
         const userId = user._id || user.id;
-        const success = await updateUserRole(userId, selectedRole);
+        const formData = new FormData();
+        formData.append("role", selectedRole);
+
+        if (imageFile) {
+            formData.append("profilePicture", imageFile);
+        }
+
+        const success = await updateUser(userId, formData);
         if (success) {
-            toast.success("Rol actualizado correctamente");
+            toast.success("Usuario actualizado correctamente");
             onClose();
         }
     };
@@ -53,11 +65,15 @@ export const UserDetailModal = ({ isOpen, onClose, user }) => {
                                 src={user.profilePicture}
                                 alt={user.username}
                                 className="w-16 h-16 rounded-full object-cover border-2 border-gray-200"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = defaultAvatar;
+                                }}
                             />
                         ) : (
                             <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center border-2 border-gray-200 overflow-hidden">
                                 <img
-                                    src="../../../assets/img/avatarDefault.png"
+                                    src={defaultAvatar}
                                     alt="Avatar"
                                     className="w-full h-full object-cover"
                                 />
@@ -110,6 +126,39 @@ export const UserDetailModal = ({ isOpen, onClose, user }) => {
                             <option value="KITCHEN_ROLE">KITCHEN_ROLE</option>
                             <option value="CLIENT">CLIENT</option>
                         </select>
+                    </div>
+
+                    {/* EDIT PROFILE PICTURE */}
+                    <div className="pt-2">
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Editar Foto de Perfil
+                        </label>
+                        <div className="flex items-center gap-4 bg-gray-50 p-3 rounded-lg border-2 border-dashed border-gray-200">
+                            <img
+                                src={imagePreview || user.profilePicture || defaultAvatar}
+                                alt={user.username}
+                                className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 bg-white"
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = defaultAvatar;
+                                }}
+                            />
+                            <div className="flex-1">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            setImageFile(file);
+                                            setImagePreview(URL.createObjectURL(file));
+                                        }
+                                    }}
+                                    className="w-full text-xs text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 transition cursor-pointer"
+                                />
+                                <p className="text-[10px] text-gray-400 mt-1">Soporta JPG, PNG, GIF. Max 5MB.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

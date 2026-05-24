@@ -83,11 +83,13 @@ export const useAdminStore = create((set, get) => ({
             const response = await updateUserRequest(id, userData);
             const updatedUser = response.data?.user || response.data?.data || response.data || response;
             set({
-                users: get().users.map((u) => (u._id === id ? updatedUser : u)),
+                users: get().users.map((u) => (u._id === id || u.id === id ? updatedUser : u)),
                 loading: false
             });
+            return true;
         } catch (error) {
             set({ loading: false, error: error.response?.data?.message || "Error al actualizar usuario" });
+            return false;
         }
     },
 

@@ -36,7 +36,7 @@ const AuthPage = () => {
                         {view === "forgot"
                             ? "Ingresa tu correo para recuperar tu contraseña"
                             : view === "register"
-                            ? "Regístrate como administrador"
+                            ? "Crea una cuenta para iniciar"
                             : "Ingresa a tu cuenta"}
                     </p>
 

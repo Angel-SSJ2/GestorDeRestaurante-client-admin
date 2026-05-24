@@ -6,11 +6,19 @@ export const getUsers = async () => {
 };
 
 export const createUser = async (data) => {
-    return await axiosAdmin.post("/users/register", data);
+    return await axiosAdmin.post("/users/register", data, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
 };
 
 export const updateUser = async (id, data) => {
-    return await axiosAdmin.put(`/users/update/${id}`, data);
+    return await axiosAdmin.put(`/users/update/${id}`, data, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
 };
 
 export const deleteUser = async (id) => {
