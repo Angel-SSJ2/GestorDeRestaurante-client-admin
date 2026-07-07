@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useAdminStore } from "../../users/store/adminStore";
 import { useSaveEvent } from "../hooks/useSaveEvent";
 
@@ -8,11 +10,11 @@ export const EventsModal = ({ onClose, event }) => {
     const [preview, setPreview] = useState(null);
 
     const [formData, setFormData] = useState({
-        restaurant: event?.restaurant || '',
+        restaurant: event?.restaurant?._id || event?.restaurant || '',
         name: event?.name || '',
         description: event?.description || '',
         type: event?.type || 'festival',
-        date: event?.date || '',
+        date: event?.date ? new Date(event.date) : null,
         capacity: event?.capacity || 50,
         price: event?.price || 0,
         image: null
@@ -29,11 +31,11 @@ export const EventsModal = ({ onClose, event }) => {
     useEffect(() => {
         if (event) {
             setFormData({
-                restaurant: event.restaurant || '',
+                restaurant: event.restaurant?._id || event.restaurant || '',
                 name: event.name || '',
                 description: event.description || '',
                 type: event.type || 'festival',
-                date: event.date ? new Date(event.date).toISOString().slice(0, 16) : '',
+                date: event.date ? new Date(event.date) : null,
                 capacity: event.capacity || 50,
                 price: event.price || 0,
                 image: null
@@ -62,7 +64,9 @@ export const EventsModal = ({ onClose, event }) => {
             alert('Por favor selecciona un restaurante');
             return;
         }
-        const success = await saveEvent(formData, event?._id);
+        const eventData = { ...formData, date: formData.date ? formData.date.toISOString() : '' };
+
+        const success = await saveEvent(eventData, event?._id);
         if (success) onClose();
     };
 
@@ -159,12 +163,17 @@ export const EventsModal = ({ onClose, event }) => {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col">
                             <label className="text-xs font-bold text-gray-500 uppercase mb-1">Fecha y Hora</label>
-                            <input 
-                                type="datetime-local"
+                            <DatePicker
+                                selected={formData.date}
+                                onChange={(date) => setFormData({...formData, date})}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={30}
+                                timeCaption="Hora"
+                                dateFormat="dd/MM/yyyy h:mm aa"
+                                placeholderText="Seleccione fecha y hora"
+                                className="w-full px-3 py-2 rounded-lg border-2 border-gray-100 outline-none focus:border-main-blue transition cursor-pointer"
                                 required
-                                value={formData.date}
-                                onChange={(e) => setFormData({...formData, date: e.target.value})}
-                                className="px-3 py-2 rounded-lg border-2 border-gray-100 outline-none focus:border-main-blue transition"
                             />
                         </div>
 

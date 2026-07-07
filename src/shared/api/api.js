@@ -3,18 +3,12 @@ import { useAuthStore } from '../../features/auth/store/authStore';
 
 const axiosAuth = axios.create({
   baseURL: import.meta.env.VITE_AUTH_URL,
-  timeout: 8000,
-  headers: {
-    'Content-Type': 'application/json',
-  }
+  timeout: 60000
 });
 
 const axiosAdmin = axios.create({
   baseURL: import.meta.env.VITE_ADMIN_URL,
-  timeout: 8000,
-  headers: {
-    'Content-Type': 'application/json',
-  }
+  timeout: 60000
 });
 
 const requestInterceptor = (config) => {

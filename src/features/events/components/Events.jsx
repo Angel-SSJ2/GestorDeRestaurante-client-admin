@@ -5,13 +5,14 @@ import { EventsModal } from "./Events.Modal";
 import { showConfirmToast } from "../../auth/components/ConfirmModal";
 
 export const Events = () => {
-    const { events, loading, error, getEvents, deleteEvent } = useAdminStore();
+    const { events, loading, error, getEvents, deleteEvent, getRestaurants } = useAdminStore();
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         getEvents();
-    }, [getEvents]);
+        getRestaurants();
+    }, [getEvents, getRestaurants]);
 
     if (loading && events.length === 0) return <Spinner />;
 

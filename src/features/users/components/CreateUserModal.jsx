@@ -10,19 +10,16 @@ export const CreateUserModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     const onSubmit = async (data) => {
-        const formData = new FormData();
-        formData.append("name", data.name);
-        formData.append("surname", data.surname);
-        formData.append("username", data.username);
-        formData.append("email", data.email);
-        formData.append("password", data.password);
-        formData.append("phone", data.phone);
-        
-        if (data.profilePicture[0]) {
-            formData.append("profilePicture", data.profilePicture[0]);
-        }
+        const payload = {
+            name: data.name,
+            surname: data.surname,
+            email: data.email,
+            password: data.password,
+            phone: data.phone,
+            role: "CLIENT" 
+        };
 
-        const success = await createUser(formData);
+        const success = await createUser(payload);
         
         if (success !== false) {
             toast.success("¡Usuario creado con éxito!");
@@ -64,14 +61,7 @@ export const CreateUserModal = ({ isOpen, onClose }) => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                            <input 
-                                {...register("username", { required: "El username es obligatorio" })}
-                                type="text" 
-                                className="w-full px-3 py-2 border rounded-lg" 
-                            />
-                        </div>
+
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
                             <input 

@@ -6,19 +6,11 @@ export const getUsers = async () => {
 };
 
 export const createUser = async (data) => {
-    return await axiosAdmin.post("/users/register", data, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    });
+    return await axiosAdmin.post("/users/register", data);
 };
 
 export const updateUser = async (id, data) => {
-    return await axiosAdmin.put(`/users/update/${id}`, data, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    });
+    return await axiosAdmin.put(`/users/update/${id}`, data);
 };
 
 export const deleteUser = async (id) => {
@@ -31,11 +23,7 @@ export const getRestaurants = async () => {
 };
 
 export const createRestaurant = async (data) => {
-    return await axiosAdmin.post("/restaurants", data, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    });
+    return await axiosAdmin.post("/restaurants", data);
 };
 
 export const deleteRestaurant = async (id) => {
@@ -43,11 +31,7 @@ export const deleteRestaurant = async (id) => {
 };
 
 export const updateRestaurant = async (id, data) => {
-    return await axiosAdmin.put(`/restaurants/${id}`, data, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    });
+    return await axiosAdmin.put(`/restaurants/${id}`, data);
 };
 
 // ================= PLATOS / MENÚ =================
@@ -56,19 +40,11 @@ export const getDishes = async () => {
 };
 
 export const createDish = async (data) => {
-    return await axiosAdmin.post("/dishes/add", data, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    });
+    return await axiosAdmin.post("/dishes/add", data);
 };
 
 export const updateDish = async (id, data) => {
-    return await axiosAdmin.put(`/dishes/update/${id}`, data, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    });
+    return await axiosAdmin.put(`/dishes/update/${id}`, data);
 };
 
 export const deleteDish = async (id) => {
@@ -132,19 +108,11 @@ export const getEvent = async (id) => {
 };
 
 export const createEvent = async (data) => {
-    return await axiosAdmin.post("/events/add", data, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    });
+    return await axiosAdmin.post("/events/add", data);
 };
 
 export const updateEvent = async (id, data) => {
-    return await axiosAdmin.put(`/events/update/${id}`, data, {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    });
+    return await axiosAdmin.put(`/events/update/${id}`, data);
 };
 
 export const reserveEvent = async (id, data) => {

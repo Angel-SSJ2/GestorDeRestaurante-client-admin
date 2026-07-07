@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useAdminStore } from "../../users/store/adminStore";
 import { useSaveReservation } from "../hooks/useSaveReservation";
 
@@ -10,7 +12,7 @@ export const ReservationModal = ({ reservation, onClose }) => {
         restaurant: reservation?.restaurant?._id || reservation?.restaurant || '',
         table: reservation?.table?._id || reservation?.table || '',
         user: reservation?.user?._id || reservation?.user || '',
-        date: reservation?.date || '',
+        date: reservation?.date ? new Date(reservation.date) : null,
         guests: reservation?.guests || reservation?.pax || 1,
         status: reservation?.status || 'pendiente'
     });
@@ -27,7 +29,7 @@ export const ReservationModal = ({ reservation, onClose }) => {
                 restaurant: reservation.restaurant?._id || reservation.restaurant || '',
                 table: reservation.table?._id || reservation.table || '',
                 user: reservation.user?._id || reservation.user || '',
-                date: reservation.date ? new Date(reservation.date).toISOString().slice(0, 16) : '',
+                date: reservation.date ? new Date(reservation.date) : null,
                 guests: reservation.guests || reservation.pax || 1,
                 status: reservation.status || 'pendiente'
             });
@@ -39,7 +41,8 @@ export const ReservationModal = ({ reservation, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const success = await saveReservation(formData, reservation?._id);
+        const reservationData = { ...formData, date: formData.date ? formData.date.toISOString() : '' };
+        const success = await saveReservation(reservationData, reservation?._id);
         if (success) onClose();
     };
 
@@ -104,12 +107,17 @@ export const ReservationModal = ({ reservation, onClose }) => {
                         {/* FECHA Y HORA */}
                         <div className="flex flex-col">
                             <label className="text-sm font-semibold text-gray-700 mb-1">Fecha y Hora</label>
-                            <input
+                            <DatePicker
+                                selected={formData.date}
+                                onChange={(date) => setFormData({...formData, date})}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={30}
+                                timeCaption="Hora"
+                                dateFormat="dd/MM/yyyy h:mm aa"
+                                placeholderText="Seleccione fecha y hora"
+                                className="w-full px-3 py-2 rounded-lg border-2 border-main-blue/20 focus:border-main-blue outline-none cursor-pointer"
                                 required
-                                type="datetime-local"
-                                value={formData.date}
-                                onChange={(e) => setFormData({...formData, date: e.target.value})}
-                                className="w-full px-3 py-2 rounded-lg border-2 border-main-blue/20 focus:border-main-blue outline-none"
                             />
                         </div>
 

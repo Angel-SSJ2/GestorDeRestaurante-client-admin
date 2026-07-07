@@ -10,7 +10,7 @@ export const useSaveMenu = () => {
             
             formData.append('name', data.name);
             formData.append('price', data.price);
-            formData.append('category', data.category);
+            formData.append('category', data.category.toLowerCase());
             formData.append('description', data.description);
 
             if (data.image instanceof File) {
