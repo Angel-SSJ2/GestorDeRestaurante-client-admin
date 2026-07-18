@@ -2,20 +2,22 @@ import { useState } from "react";
 import { LoginForm } from "../components/LoginForm.jsx";
 import { ForgotPasswordForm } from "../components/ForgotPasswordForm";
 import { RegisterForm } from "../components/RegisterForm.jsx";
+import fondoImg from "../../../assets/img/fondo.png";
+import logoImg from "../../../assets/img/Logo_Restaurante.png";
 
 const AuthPage = () => {
     const [view, setView] = useState("login");
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4"
-        style={{ backgroundImage: "url('/src/assets/img/fondo.png')" }}
+        style={{ backgroundImage: `url(${fondoImg})` }}
         >
             <div className="w-full z-10 max-w-xl bg-white rounded-xl shadow-2xl border-4 border-blue-900 p-6 md:p-10">
 
                 {/* LOGO */}
                 <div className="flex justify-center mb-6">
                     <img
-                        src="/src/assets/img/Logo_Restaurante.png"
+                        src={logoImg}
                         alt="Gestor de Restaurante Logo"
                         className="h-30 w-auto"
                     />

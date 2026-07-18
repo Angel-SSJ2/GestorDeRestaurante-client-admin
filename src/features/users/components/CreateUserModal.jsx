@@ -16,7 +16,7 @@ export const CreateUserModal = ({ isOpen, onClose }) => {
             email: data.email,
             password: data.password,
             phone: data.phone,
-            role: "CLIENT" 
+            role: data.role
         };
 
         const success = await createUser(payload);
@@ -61,14 +61,25 @@ export const CreateUserModal = ({ isOpen, onClose }) => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
                             <input 
-                                {...register("phone")}
+                                {...register("phone", { required: "El teléfono es obligatorio" })}
                                 type="tel" 
-                                className="w-full px-3 py-2 border rounded-lg" 
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.phone ? 'border-red-500' : ''}`} 
                             />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Rol</label>
+                            <select 
+                                {...register("role")}
+                                className="w-full px-3 py-2 border rounded-lg bg-white"
+                            >
+                                <option value="CLIENT">Cliente</option>
+                                <option value="WAITER_ROLE">Mesero</option>
+                                <option value="KITCHEN_ROLE">Cocina/Chef</option>
+                                <option value="ADMIN_ROLE">Administrador</option>
+                            </select>
                         </div>
                     </div>
 
@@ -77,7 +88,7 @@ export const CreateUserModal = ({ isOpen, onClose }) => {
                         <input 
                             {...register("email", { required: "Email inválido", pattern: /^\S+@\S+$/i })}
                             type="email" 
-                            className="w-full px-3 py-2 border rounded-lg" 
+                            className={`w-full px-3 py-2 border rounded-lg ${errors.email ? 'border-red-500' : ''}`} 
                         />
                     </div>
 
@@ -87,7 +98,7 @@ export const CreateUserModal = ({ isOpen, onClose }) => {
                             <input 
                                 {...register("password", { required: "Mínimo 6 caracteres", minLength: 6 })}
                                 type="password" 
-                                className="w-full px-3 py-2 border rounded-lg" 
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.password ? 'border-red-500' : ''}`} 
                             />
                         </div>
                         <div>
